@@ -1,0 +1,5 @@
+Typify/bin/
+Typify/obj/
+Typify.Test/obj/
+Typify.Test/typified.d.ts
+Typify.Test/bin/
