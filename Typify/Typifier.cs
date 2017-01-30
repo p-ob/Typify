@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
 
     public static class Typifier
     {
@@ -30,14 +31,14 @@
                     .ToLookup(pair => pair.Value, pair => pair.Key);
         }
 
-        public static void Typify()
+        public static void Typify(TypifyOptions options)
         {
             var typesToTypify = GetTypesToTypify();
             var typeScriptDefinitions = new List<TypeScriptDefinition>();
 
             foreach (var type in typesToTypify)
             {
-                var definition = GenerateTypeScriptDefinition(type);
+                var definition = GenerateTypeScriptDefinition(type, options.NamingStrategy);
                 if (
                     !typeScriptDefinitions.Any(
                         td => td.Name == definition.Namespace && td.Namespace == definition.Namespace))
@@ -71,29 +72,45 @@
             return typesToTypify;
         }
 
-        private static TypeScriptDefinition GenerateTypeScriptDefinition(Type type)
+        private static TypeScriptDefinition GenerateTypeScriptDefinition(Type type, NamingStrategy namingStrategy)
         {
             var typeScriptDefinition = new TypeScriptDefinition
             {
                 Source = type,
                 Name = type.Name,
-                Namespace = type.Namespace, // TODO convert Namespace.Format -> 'namespace-format'
+                Namespace = type.Namespace.Replace('.', '-').ToLowerInvariant(),
                 Properties =
                     type.GetProperties(PropertyBindingFlags)
-                        .Select(MapPropertyInfoToTypeScriptProperty)
+                        .Select(p => MapPropertyInfoToTypeScriptProperty(p, namingStrategy))
             };
 
+            
             return typeScriptDefinition;
         }
 
-        private static TypeScriptProperty MapPropertyInfoToTypeScriptProperty(PropertyInfo property)
+        private static TypeScriptProperty MapPropertyInfoToTypeScriptProperty(PropertyInfo property, NamingStrategy namingStrategy)
         {
             var typeInfo = property.PropertyType.GetTypeInfo();
             var editableAttribute = typeInfo.GetCustomAttribute<EditableAttribute>();
+
+            string FormatName()
+            {
+                switch (namingStrategy)
+                {
+                    case NamingStrategy.CamelCase:
+                        return property.Name.ToCamelCase();
+                    case NamingStrategy.SnakeCase:
+                        return property.Name.ToSnakeCase();
+                    case NamingStrategy.None:
+                    default:
+                        return property.Name;
+                }
+            }
+
             return new TypeScriptProperty
             {
                 Source = property,
-                Name = property.Name,
+                Name = FormatName(),
                 Type = MapTypeToTypeScriptType(property.PropertyType),
                 IsNullable = typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>),
                 IsReadonly = editableAttribute != null && !editableAttribute.AllowEdit
@@ -124,7 +141,7 @@
                 var underlyingTypes = typeInfo.GenericTypeArguments;
                 if (underlyingTypes != null && underlyingTypes.Length == 1)
                 {
-                    return $"[]{MapTypeToTypeScriptType(underlyingTypes.First())}";
+                    return $"{MapTypeToTypeScriptType(underlyingTypes.First())}[]";
                 }
             }
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -172,9 +189,8 @@
             var typeScriptFileContents = string.Empty;
             foreach (var namespacedDefinition in namespacedDefinitions)
             {
-                var typeScriptNamespace = namespacedDefinition.Key.Replace('.', '-').ToLowerInvariant();
                 typeScriptFileContents +=
-                    $"declare module \"{typeScriptNamespace}\"{{\n{string.Join("\n", namespacedDefinition.Select(d => d.ToTypescriptString(1)))}\n}}";
+                    $"declare module \"{namespacedDefinition.Key}\"{{\n{string.Join("\n", namespacedDefinition.Select(d => d.ToTypescriptString(1)))}\n}}";
             }
 
             const string file = "typified.d.ts";
@@ -183,6 +199,48 @@
             {
                 tw.Write(typeScriptFileContents);
             }
+        }
+
+        private static string ToCamelCase(this string str)
+        {
+            if (str == null || str.Length < 2)
+                return str;
+
+            var words = SplitStringsOnCapitalLetters(str);
+            var result = words[0].ToLower();
+            for (int i = 1; i < words.Length; i++)
+            {
+                result +=
+                    words[i].Substring(0, 1).ToUpper() +
+                    words[i].Substring(1);
+            }
+
+            return result;
+        }
+
+        private static string ToSnakeCase(this string str)
+        {
+            if (str == null || str.Length < 2)
+                return str;
+
+            var words = SplitStringsOnCapitalLetters(str);
+            for (var i = 0; i < words.Length; i++)
+            {
+                words[i] = words[i].ToLowerInvariant();
+            }
+            var result = string.Join("_", words);
+
+            return result;
+        }
+
+        private static string[] SplitStringsOnCapitalLetters(string s)
+        {
+            var r = new Regex(@"
+                (?<=[A-Z])(?=[A-Z][a-z]) |
+                 (?<=[^A-Z])(?=[A-Z]) |
+                 (?<=[A-Za-z])(?=[^A-Za-z])", RegexOptions.IgnorePatternWhitespace);
+
+            return r.Split(s);
         }
     }
 }

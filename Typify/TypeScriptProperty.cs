@@ -16,7 +16,7 @@
 
         public string ToTypescriptString()
         {
-            return $"{(IsReadonly ? "readonly " : "")}{Name}{(IsNullable ? "?" : "")}: {Type}";
+            return $"{(IsReadonly ? "readonly " : "")}{Name}{(IsNullable ? "?" : "")}: {Type};";
         }
     }
 }

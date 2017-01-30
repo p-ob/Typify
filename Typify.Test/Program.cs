@@ -7,7 +7,10 @@
         private static void Main(string[] args)
         {
             Console.WriteLine("Typification commencing.");
-            Typifier.Typify();
+            Typifier.Typify(new TypifyOptions
+            {
+                NamingStrategy = NamingStrategy.SnakeCase
+            });
             Console.WriteLine("Typification complete.");
             Console.Read();
         }
