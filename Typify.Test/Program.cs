@@ -9,7 +9,7 @@
             Console.WriteLine("Typification commencing.");
             Typifier.Typify(new TypifyOptions
             {
-                NamingStrategy = NamingStrategy.SnakeCase
+                NamingStrategy = NamingStrategy.CamelCase
             });
             Console.WriteLine("Typification complete.");
             Console.Read();
