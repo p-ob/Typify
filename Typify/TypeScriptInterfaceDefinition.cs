@@ -1,33 +1,31 @@
 ﻿namespace Typify
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using System.Dynamic;
     using System.Linq;
     using System.Reflection;
 
-    internal class TypeScriptInterfaceDefinition<T> : ITypeScriptDefinition where T : class
+    internal class TypeScriptInterfaceDefinition<T> : TypeScriptInterfaceDefinition where T : class
     {
         private readonly TypifyOptions _options;
 
         public Type Source => typeof(T);
 
-        public string Namespace => Source.Namespace.Replace('.', '-').ToLowerInvariant();
+        public override string Namespace => Source.Namespace.ToTypeScriptNamespace();
 
-        public string Name => Source.Name;
+        public override string Name => Source.Name;
 
-        public IEnumerable<TypeScriptProperty> Properties => GetTypescriptProperties();
+        public override IEnumerable<TypeScriptProperty> Properties => GetTypescriptProperties();
 
-        // TODO
-        public IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
+        public override IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
 
         public TypeScriptInterfaceDefinition(TypifyOptions options)
         {
             _options = options ?? new TypifyOptions();
         }
 
-        public string ToTypescriptString(int startTabIndex = 0)
+        public override string ToTypescriptString(int startTabIndex = 0)
         {
             var tabsString = new string('\t', startTabIndex);
             return
@@ -36,8 +34,20 @@
 
         private IEnumerable<TypeScriptProperty> GetTypescriptProperties()
         {
-            var properties = Source.GetProperties(Utilities.PropertyBindingFlags);
+            var properties = Source.GetProperties(Utilities.PropertyBindingFlags).Distinct();
             return properties.Select(p => new TypeScriptProperty(p, _options));
+        }
+    }
+
+    internal abstract class TypeScriptInterfaceDefinition : ITypeScriptDefinition
+    {
+        public virtual string Name { get; set; }
+        public virtual string Namespace { get; set; }
+        public virtual IEnumerable<TypeScriptProperty> Properties { get; set; }
+        public virtual IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
+        public virtual string ToTypescriptString(int startTabIndex = 0)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -74,6 +74,24 @@
             return typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
+        public static string ToTypeScriptNamespace(this string assemblyNamespace)
+        {
+            return assemblyNamespace.Replace('.', '-').ToLowerInvariant();
+        }
+
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector)
+        {
+            var seenKeys = new HashSet<TKey>();
+            foreach (var element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
+
         private static string[] SplitOnCapitalLetters(this string s)
         {
             var r = new Regex(@"

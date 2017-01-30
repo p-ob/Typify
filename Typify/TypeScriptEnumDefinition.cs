@@ -8,7 +8,7 @@
     {
         public Type Source => typeof(T);
 
-        public string Namespace => Source.Namespace.Replace('.', '-').ToLowerInvariant();
+        public string Namespace => Source.Namespace.ToTypeScriptNamespace();
 
         public IEnumerable<string> EnumValueNames => Enum.GetNames(Source);
 

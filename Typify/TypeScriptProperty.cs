@@ -14,7 +14,11 @@
 
         public string Name => FormatName();
 
-        public string Type => MapTypeToTypeScriptType(Source.PropertyType);
+        public bool IsImport { get; private set; }
+
+        public string Namespace => Source.PropertyType.Namespace.ToTypeScriptNamespace();
+
+        public string Type { get; }
 
         public bool IsNullable => Source.PropertyType.IsNullable();
 
@@ -30,6 +34,7 @@
         public TypeScriptProperty(PropertyInfo source, TypifyOptions options)
         {
             Source = source;
+            Type = MapTypeToTypeScriptType(Source.PropertyType);
             _options = options;
         }
 
@@ -103,6 +108,7 @@
             // assume complex objects have TypeScript definitions created
             if (typeInfo.IsClass || typeInfo.IsEnum)
             {
+                IsImport = Source.DeclaringType.Namespace != Source.PropertyType.Namespace;
                 return type.Name;
             }
 
