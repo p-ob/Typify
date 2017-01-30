@@ -16,6 +16,8 @@
         [Editable(false)]
         public int ReadonlyInt { get; set; }
 
+        public float? ReadonlyNullableFloat { get; }
+
         public SubEntity SubEntity { get; set; }
 
         private int _notPublic;

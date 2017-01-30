@@ -4,7 +4,7 @@
     {
         string Name { get; }
 
-        string Namespace { get; set; }
+        string Namespace { get; }
 
         string ToTypescriptString(int startTabIndex = 0);
     }

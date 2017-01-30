@@ -1,11 +1,41 @@
 ﻿namespace Typify
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
 
     internal static class Utilities
     {
+        public const BindingFlags PropertyBindingFlags =
+            BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+
+        public static readonly ILookup<Type, string> DotNetTypeToTypeScriptTypeLookup;
+
+        static Utilities()
+        {
+            var typeScriptTypeToDotNetTypes = new Dictionary<string, IEnumerable<Type>>
+            {
+                {
+                    "number",
+                    new[]
+                    {
+                        typeof(int), typeof(float), typeof(decimal), typeof(long), typeof(byte), typeof(sbyte),
+                        typeof(short), typeof(ushort), typeof(uint), typeof(ulong)
+                    }
+                },
+                { "string", new[] { typeof(string), typeof(char) } },
+                { "boolean", new[] { typeof(bool) } },
+                { "Date", new[] { typeof(DateTime), typeof(DateTimeOffset) } },
+                { "any", new[] { typeof(object) } }
+            };
+
+            DotNetTypeToTypeScriptTypeLookup =
+                typeScriptTypeToDotNetTypes.SelectMany(pair => pair.Value, (pair, value) => new { pair.Key, value })
+                    .ToLookup(pair => pair.value, pair => pair.Key);
+        }
+
         public static string ToCamelCase(this string str)
         {
             if (str == null || str.Length < 2)

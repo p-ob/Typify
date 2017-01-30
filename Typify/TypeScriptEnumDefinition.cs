@@ -6,13 +6,13 @@
 
     internal class TypeScriptEnumDefinition<T> : ITypeScriptDefinition where T : struct, IConvertible
     {
-        public Type EnumType => typeof(T);
+        public Type Source => typeof(T);
 
-        public string Namespace { get; set; }
+        public string Namespace => Source.Namespace.Replace('.', '-').ToLowerInvariant();
 
-        public IEnumerable<string> EnumValueNames => Enum.GetNames(typeof(T));
+        public IEnumerable<string> EnumValueNames => Enum.GetNames(Source);
 
-        public string Name => typeof(T).Name;
+        public string Name => Source.Name;
 
         public string ToTypescriptString(int startTabIndex = 0)
         {
@@ -27,9 +27,9 @@
             return $"{enumValueName} = {value},";
         }
 
-        private static object GetEnumValue(string enumValueName)
+        private object GetEnumValue(string enumValueName)
         {
-            return (int)Enum.Parse(typeof(T), enumValueName);
+            return (int)Enum.Parse(Source, enumValueName);
         }
     }
 }

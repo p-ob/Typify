@@ -1,36 +1,13 @@
 ﻿namespace Typify
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
     using System.Reflection;
 
     public static class Typifier
     {
-        private const BindingFlags PropertyBindingFlags =
-            BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-
-        private static readonly ILookup<Type, string> DotNetTypeToTypeScriptTypeLookup;
-
-        static Typifier()
-        {
-            var typeScriptTypeToDotNetTypes = new Dictionary<string, IEnumerable<Type>>
-            {
-                { "number", new[] { typeof(int), typeof(float), typeof(decimal), typeof(long) } },
-                { "string", new[] { typeof(string), typeof(char) } },
-                { "boolean", new[] { typeof(bool) } },
-                { "Date", new[] { typeof(DateTime), typeof(DateTimeOffset) } },
-                { "any", new[] { typeof(object) } }
-            };
-
-            DotNetTypeToTypeScriptTypeLookup =
-                typeScriptTypeToDotNetTypes.SelectMany(pair => pair.Value, (pair, value) => new { pair.Key, value })
-                    .ToLookup(pair => pair.value, pair => pair.Key);
-        }
-
         public static void Typify(TypifyOptions options)
         {
             var typesToTypify = GetTypesToTypify();
@@ -38,7 +15,7 @@
 
             foreach (var type in typesToTypify)
             {
-                var definition = GenerateTypeScriptDefinition(type, options.NamingStrategy);
+                var definition = GenerateTypeScriptDefinition(type, options);
                 if (
                     !typeScriptDefinitions.Any(
                         td => td.Name == definition.Namespace && td.Namespace == definition.Namespace))
@@ -66,13 +43,13 @@
                 }
             }
 
-            var propertyTypes = typesToTypify.SelectMany(GetPropertyTypes).Distinct().ToList();
+            var propertyTypes = typesToTypify.SelectMany(GetPropertyTypesToTypify).Distinct().ToList();
             typesToTypify.AddRange(propertyTypes.Where(pt => !typesToTypify.Contains(pt)));
 
             return typesToTypify;
         }
 
-        private static ITypeScriptDefinition GenerateTypeScriptDefinition(Type type, NamingStrategy namingStrategy)
+        private static ITypeScriptDefinition GenerateTypeScriptDefinition(Type type, TypifyOptions options)
         {
             ITypeScriptDefinition typeScriptDefinition;
             if (type.GetTypeInfo().IsEnum)
@@ -81,119 +58,23 @@
             }
             else
             {
-                typeScriptDefinition = new TypeScriptInterfaceDefinition
-                {
-                    Source = type,
-                    Name = type.Name,
-                    Namespace = type.Namespace.Replace('.', '-').ToLowerInvariant(),
-                    Properties =
-                        type.GetProperties(PropertyBindingFlags)
-                            .Select(p => MapPropertyInfoToTypeScriptProperty(p, namingStrategy))
-                };
+                typeScriptDefinition = Activator.CreateInstance(typeof(TypeScriptInterfaceDefinition<>).MakeGenericType(type), options) as ITypeScriptDefinition;
             }
 
-            typeScriptDefinition.Namespace = type.Namespace.Replace('.', '-').ToLowerInvariant();
             return typeScriptDefinition;
         }
 
-        private static TypeScriptProperty MapPropertyInfoToTypeScriptProperty(PropertyInfo property,
-            NamingStrategy namingStrategy)
-        {
-            var typeInfo = property.PropertyType.GetTypeInfo();
-            var editableAttribute = typeInfo.GetCustomAttribute<EditableAttribute>();
-
-            string FormatName()
-            {
-                switch (namingStrategy)
-                {
-                    case NamingStrategy.CamelCase:
-                        return property.Name.ToCamelCase();
-                    case NamingStrategy.SnakeCase:
-                        return property.Name.ToSnakeCase();
-                    case NamingStrategy.None:
-                    default:
-                        return property.Name;
-                }
-            }
-
-            return new TypeScriptProperty
-            {
-                Source = property,
-                Name = FormatName(),
-                Type = MapTypeToTypeScriptType(property.PropertyType),
-                IsNullable = property.PropertyType.IsNullable(),
-                IsReadonly = editableAttribute != null && !editableAttribute.AllowEdit
-            };
-        }
-
-        private static string MapTypeToTypeScriptType(Type type)
-        {
-            // handle defined mappings
-            if (DotNetTypeToTypeScriptTypeLookup.Contains(type))
-            {
-                return DotNetTypeToTypeScriptTypeLookup[type]?.FirstOrDefault();
-            }
-
-            var typeInfo = type.GetTypeInfo();
-            var numberTypes =
-                DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("number")).Select(t => t.Key);
-            var stringTypes =
-                DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string")).Select(t => t.Key);
-
-            // Dictionaries => map or Object
-            if (typeof(IDictionary).IsAssignableFrom(type))
-            {
-                var underlyingTypes = typeInfo.GenericTypeArguments;
-                if (underlyingTypes != null && underlyingTypes.Length == 2)
-                {
-                    var keyType = underlyingTypes[0];
-                    var valueType = underlyingTypes[1];
-                    if (numberTypes.Contains(keyType) || stringTypes.Contains(keyType))
-                    {
-                        var typeScriptKeyType = MapTypeToTypeScriptType(keyType);
-                        var typeScriptValueType = MapTypeToTypeScriptType(valueType);
-                        return $"[{typeScriptKeyType}]: {typeScriptValueType}";
-                    }
-                    return "Object";
-                }
-            }
-
-            // IEnumerable => []{type}
-            if (typeof(IEnumerable).IsAssignableFrom(type))
-            {
-                var underlyingTypes = typeInfo.GenericTypeArguments;
-                if (underlyingTypes != null && underlyingTypes.Length == 1)
-                {
-                    return $"{MapTypeToTypeScriptType(underlyingTypes.First())}[]";
-                }
-            }
-
-            // Nullable types => {type}?
-            if (type.IsNullable())
-            {
-                return MapTypeToTypeScriptType(typeInfo.GenericTypeArguments[0]);
-            }
-
-            // assume complex objects have TypeScript definitions created
-            if (typeInfo.IsClass || typeInfo.IsEnum)
-            {
-                return type.Name;
-            }
-
-            return "any";
-        }
-
-        private static IEnumerable<Type> GetPropertyTypes(Type type)
+        private static IEnumerable<Type> GetPropertyTypesToTypify(Type type)
         {
             var propertyTypes =
-                type.GetProperties(PropertyBindingFlags)
+                type.GetProperties(Utilities.PropertyBindingFlags)
                     .Where(
                         p =>
-                            !(DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
-                            p.PropertyType.Namespace == "System" || p.PropertyType.Namespace.StartsWith("System.")))
+                            !(Utilities.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
+                              p.PropertyType.Namespace == "System" || p.PropertyType.Namespace.StartsWith("System.")))
                     .Select(t => t.PropertyType)
                     .ToList();
-            var subPropertyTypes = propertyTypes.SelectMany(GetPropertyTypes).Distinct().ToList();
+            var subPropertyTypes = propertyTypes.SelectMany(GetPropertyTypesToTypify).Distinct().ToList();
             propertyTypes.AddRange(subPropertyTypes);
             return propertyTypes;
         }
