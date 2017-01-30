@@ -2,7 +2,7 @@
 {
     using System.Reflection;
 
-    public class TypeScriptProperty
+    internal class TypeScriptProperty
     {
         public PropertyInfo Source { get; set; }
 

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class TypeScriptDefinition
+    internal class TypeScriptInterfaceDefinition : ITypeScriptDefinition
     {
         public Type Source { get; set; }
 
@@ -14,8 +14,7 @@
 
         public IEnumerable<TypeScriptProperty> Properties { get; set; }
 
-        public IEnumerable<TypeScriptDefinition> Dependencies { get; set; }
-
+        public IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
         public string ToTypescriptString(int startTabIndex = 0)
         {
             var tabsString = new string('\t', startTabIndex);

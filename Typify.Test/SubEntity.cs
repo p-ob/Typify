@@ -7,5 +7,7 @@
         public int Id { get; set; }
 
         public IEnumerable<int> SomeArray { get; set; }
+
+        public SomeEnum SomeEnum { get; set; }
     }
 }
