@@ -1,7 +1,5 @@
 ﻿namespace Typify
 {
-    using System;
-
     public class TypifyOptions
     {
         public NamingStrategy NamingStrategy { get; set; }

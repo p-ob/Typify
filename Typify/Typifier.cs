@@ -121,18 +121,26 @@
                 Source = property,
                 Name = FormatName(),
                 Type = MapTypeToTypeScriptType(property.PropertyType),
-                IsNullable = typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>),
+                IsNullable = property.PropertyType.IsNullable(),
                 IsReadonly = editableAttribute != null && !editableAttribute.AllowEdit
             };
         }
 
         private static string MapTypeToTypeScriptType(Type type)
         {
+            // handle defined mappings
+            if (DotNetTypeToTypeScriptTypeLookup.Contains(type))
+            {
+                return DotNetTypeToTypeScriptTypeLookup[type]?.FirstOrDefault();
+            }
+
             var typeInfo = type.GetTypeInfo();
             var numberTypes =
                 DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("number")).Select(t => t.Key);
             var stringTypes =
                 DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string")).Select(t => t.Key);
+
+            // Dictionaries => map or Object
             if (typeof(IDictionary).IsAssignableFrom(type))
             {
                 var underlyingTypes = typeInfo.GenericTypeArguments;
@@ -146,8 +154,11 @@
                         var typeScriptValueType = MapTypeToTypeScriptType(valueType);
                         return $"[{typeScriptKeyType}]: {typeScriptValueType}";
                     }
+                    return "Object";
                 }
             }
+
+            // IEnumerable => []{type}
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
                 var underlyingTypes = typeInfo.GenericTypeArguments;
@@ -156,16 +167,15 @@
                     return $"{MapTypeToTypeScriptType(underlyingTypes.First())}[]";
                 }
             }
-            if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>))
+
+            // Nullable types => {type}?
+            if (type.IsNullable())
             {
                 return MapTypeToTypeScriptType(typeInfo.GenericTypeArguments[0]);
             }
 
-            if (DotNetTypeToTypeScriptTypeLookup.Contains(type))
-            {
-                return DotNetTypeToTypeScriptTypeLookup[type]?.FirstOrDefault();
-            }
-            if (typeInfo.IsClass)
+            // assume complex objects have TypeScript definitions created
+            if (typeInfo.IsClass || typeInfo.IsEnum)
             {
                 return type.Name;
             }

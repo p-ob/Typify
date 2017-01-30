@@ -1,5 +1,7 @@
 ﻿namespace Typify
 {
+    using System;
+    using System.Reflection;
     using System.Text.RegularExpressions;
 
     internal static class Utilities
@@ -34,6 +36,12 @@
             var result = string.Join("_", words);
 
             return result;
+        }
+
+        public static bool IsNullable(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            return typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         private static string[] SplitOnCapitalLetters(this string s)
