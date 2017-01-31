@@ -84,7 +84,7 @@
                     {
                         var typeScriptKeyType = MapTypeToTypeScriptType(keyType);
                         var typeScriptValueType = MapTypeToTypeScriptType(valueType);
-                        return $"[{typeScriptKeyType}]: {typeScriptValueType}";
+                        return $"{{ [ key: {typeScriptKeyType}]: {typeScriptValueType}; }}";
                     }
                     return "Object";
                 }
@@ -115,7 +115,9 @@
             // assume complex objects have TypeScript definitions created
             if (typeInfo.IsClass || typeInfo.IsEnum)
             {
-                IsImport = Source.DeclaringType.Namespace != Source.PropertyType.Namespace;
+                IsImport = Source.DeclaringType.Namespace != Source.PropertyType.Namespace &&
+                           Source.PropertyType.Namespace != "System" &&
+                           !Source.PropertyType.Namespace.StartsWith("System.");
                 return type.Name;
             }
 
