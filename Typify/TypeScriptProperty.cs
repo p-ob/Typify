@@ -27,7 +27,8 @@
             get
             {
                 var editableAttribute = Source.GetCustomAttribute<EditableAttribute>();
-                return (editableAttribute != null && !editableAttribute.AllowEdit) || Source.GetSetMethod() == null;
+                return (editableAttribute != null && !editableAttribute.AllowEdit) || Source.GetSetMethod() == null ||
+                       !Source.CanWrite;
             }
         }
 
