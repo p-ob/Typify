@@ -18,7 +18,7 @@ Typify builds TypeScript definitions for TypeScript 2.0 and later.
 
 ## Example
 **.NET code:**
-``` cs
+``` csharp
 namespace Typify.Test
 {
 	// mark type to "Typify" using TypifyAttribute
