@@ -92,6 +92,13 @@
             }
         }
 
+        public static string GetNameWithoutGenericArity(this Type t)
+        {
+            string name = t.Name;
+            var index = name.IndexOf('`');
+            return index == -1 ? name : name.Substring(0, index);
+        }
+
         private static string[] SplitOnCapitalLetters(this string s)
         {
             var r = new Regex(@"

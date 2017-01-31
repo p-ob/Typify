@@ -105,6 +105,12 @@
                 return MapTypeToTypeScriptType(typeInfo.GenericTypeArguments[0]);
             }
 
+            if (typeInfo.IsGenericType)
+            {
+                var name = type.GetNameWithoutGenericArity();
+                return $"{name}<{string.Join(",", type.GetGenericArguments().Select(MapTypeToTypeScriptType))}>";
+            }
+
             // assume complex objects have TypeScript definitions created
             if (typeInfo.IsClass || typeInfo.IsEnum)
             {

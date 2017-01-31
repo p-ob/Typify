@@ -20,6 +20,8 @@
 
         public SubEntity SubEntity { get; set; }
 
+        public GenericClass<int> GenericClass { get; set; }
+
         private int _notPublic;
     }
 }

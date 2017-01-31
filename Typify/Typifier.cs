@@ -54,11 +54,24 @@
             ITypeScriptDefinition typeScriptDefinition;
             if (type.GetTypeInfo().IsEnum)
             {
-                typeScriptDefinition = Activator.CreateInstance(typeof(TypeScriptEnumDefinition<>).MakeGenericType(type)) as ITypeScriptDefinition;
+                typeScriptDefinition =
+                    Activator.CreateInstance(typeof(TypeScriptEnumDefinition<>).MakeGenericType(type)) as
+                        ITypeScriptDefinition;
             }
             else
             {
-                typeScriptDefinition = Activator.CreateInstance(typeof(TypeScriptInterfaceDefinition<>).MakeGenericType(type), options) as ITypeScriptDefinition;
+                if (type.GetTypeInfo().IsGenericType)
+                {
+                    typeScriptDefinition =
+                        Activator.CreateInstance(typeof(TypeScriptGenericInterfaceDefinition<>).MakeGenericType(type), options)
+                            as ITypeScriptDefinition;
+                }
+                else
+                {
+                    typeScriptDefinition =
+                        Activator.CreateInstance(typeof(TypeScriptInterfaceDefinition<>).MakeGenericType(type), options)
+                            as ITypeScriptDefinition;
+                }
             }
 
             return typeScriptDefinition;

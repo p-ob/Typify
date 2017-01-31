@@ -1,4 +1,5 @@
-﻿namespace Some.Other.Namespace
+﻿ // ReSharper disable once CheckNamespace
+namespace Some.Other.Namespace
 {
     public class DifferentNamespaceClass
     {
