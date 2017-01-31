@@ -1,4 +1,4 @@
-# Typify
+# Typify [![Build status](https://ci.appveyor.com/api/projects/status/10whg3491rccpje9/branch/master?svg=true)](https://ci.appveyor.com/project/p-ob/typify/branch/master)
 
 Convert .NET classes into properly mapped TypeScript definitions to support 
 seamless integration of ASP.NET server-side and TypeScript client-side models
@@ -18,7 +18,7 @@ Typify builds TypeScript definitions for TypeScript 2.0 and later.
 
 ## Example
 **.NET code:**
-``` cs
+``` csharp
 namespace Typify.Test
 {
 	// mark type to "Typify" using TypifyAttribute
