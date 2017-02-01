@@ -1,4 +1,4 @@
-﻿namespace Typify
+﻿namespace Typify.NET
 {
     public enum NamingStrategy
     {

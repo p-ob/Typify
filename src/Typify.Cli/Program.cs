@@ -1,9 +1,12 @@
-﻿using System;
-
-class Program
+﻿namespace typify
 {
-    static void Main(string[] args)
+    using System;
+
+    internal class Program
     {
-        Console.WriteLine("Hello World!");
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
     }
 }

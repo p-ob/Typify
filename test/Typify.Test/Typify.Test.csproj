@@ -4,6 +4,6 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Typify\Typify.csproj" />
+    <ProjectReference Include="..\..\src\Typify.NET\Typify.NET.csproj" />
   </ItemGroup>
 </Project>

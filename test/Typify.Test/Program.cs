@@ -1,6 +1,7 @@
 ﻿namespace Typify.Test
 {
     using System;
+    using Typify.NET;
 
     internal class Program
     {

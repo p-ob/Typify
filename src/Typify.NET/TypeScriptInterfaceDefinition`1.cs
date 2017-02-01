@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Typify
+﻿namespace Typify.NET
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    internal class TypeScriptGenericInterfaceDefinition<T> : TypeScriptInterfaceDefinition where T : class
+    internal class TypeScriptInterfaceDefinition<T> : TypeScriptInterfaceDefinition where T : class
     {
         private readonly TypifyOptions _options;
 
-        public Type Source => typeof(T).GetGenericTypeDefinition();
+        public Type Source => typeof(T);
 
         public override string Namespace => Source.Namespace.ToTypeScriptNamespace();
 
-        public override string Name => Source.GetNameWithoutGenericArity();
+        public override string Name => Source.Name;
 
         public override IEnumerable<TypeScriptProperty> Properties => GetTypescriptProperties();
 
         public override IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
 
-        public TypeScriptGenericInterfaceDefinition(TypifyOptions options)
+        public TypeScriptInterfaceDefinition(TypifyOptions options)
         {
             _options = options ?? new TypifyOptions();
         }
@@ -30,12 +28,7 @@ namespace Typify
         {
             var tabsString = new string('\t', startTabIndex);
             return
-                $"{tabsString}export interface {Name}<{GetGenericArgumentsString()}> {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypescriptString()))}\n{tabsString}}}";
-        }
-
-        private string GetGenericArgumentsString()
-        {
-            return string.Join(",", Source.GetGenericArguments().Select(arg => arg.Name));
+                $"{tabsString}export interface {Name} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypescriptString()))}\n{tabsString}}}";
         }
 
         private IEnumerable<TypeScriptProperty> GetTypescriptProperties()

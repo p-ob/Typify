@@ -1,4 +1,4 @@
-﻿namespace Typify
+﻿namespace Typify.NET
 {
     using System;
     using System.Collections.Generic;

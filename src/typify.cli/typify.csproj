@@ -8,6 +8,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Typify\Typify.csproj" />
+    <ProjectReference Include="..\Typify.NET\Typify.NET.csproj" />
   </ItemGroup>
 </Project>
