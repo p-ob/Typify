@@ -84,7 +84,7 @@
                     .Where(
                         p =>
                             !(Utilities.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
-                              p.PropertyType.Namespace == "System" || p.PropertyType.Namespace.StartsWith("System.")))
+                              p.PropertyType.IsSystemType()))
                     .Select(t => t.PropertyType)
                     .ToList();
             var subPropertyTypes = propertyTypes.SelectMany(GetPropertyTypesToTypify).Distinct().ToList();

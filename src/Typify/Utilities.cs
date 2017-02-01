@@ -99,6 +99,11 @@
             return index == -1 ? name : name.Substring(0, index);
         }
 
+        public static bool IsSystemType(this Type t)
+        {
+            return t.Namespace == "System" || t.Namespace.StartsWith("System.");
+        }
+
         private static string[] SplitOnCapitalLetters(this string s)
         {
             var r = new Regex(@"

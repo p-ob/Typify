@@ -5,8 +5,11 @@ seamless integration of ASP.NET server-side and TypeScript client-side models
 
 ## Features
 1. Map base .NET objects (int, string, etc.) into their TypeScript counterparts (number, string, etc.)
+1. Generates namespaces for each unique namespace
+	- Note that it converts "Some.DotNet.Namespace" to "some-dotnet-namespace"
 1. Create complex interfaces and enums based on custom classes
-1. Support nullable and "readonly" properties based on DataAnnotations, lack of public setters, or readonly modifiers
+1. Handle external imports appropriately
+1. Support nullable (e.g. int?) and "readonly" properties based on DataAnnotations, lack of public setters, or readonly modifiers
 1. Generate complex generic interfaces to support generic typings
 1. Choose how to format property names (assumes C# standard of PascalCase):
 	1. PascalCase
@@ -50,7 +53,7 @@ namespace Typify.Test
         [Editable(false)]
         public int ReadonlyInt { get; set; }
 
-        public float? ReadonlyNullableFloat { get; }
+        public float? ReadonlyNullableFloat { get; private set; }
 
         public SubEntity SubEntity { get; set; }
 
@@ -77,14 +80,15 @@ namespace Typify.Test
     }
 }
 
-
 namespace Typify.Test
 {
     public class GenericClass<T, T2>
     {
         public T GenericProperty { get; set; }
 
-        public T2 GenericProperty2 { get; set; }
+        public IEnumerable<T2> GenericProperties2 { get; set; }
+
+        public Dictionary<string, int> DictionaryMap { get; set; }
     }
 }
 
@@ -132,7 +136,8 @@ declare module 'typify-test' {
 	}
 	export interface GenericClass<T,T2> {
 		genericProperty: T;
-		genericProperty2: T2;
+		genericProperties2: T2[];
+		dictionaryMap: { [ key: string]: number; };
 	}
 	export enum SomeEnum {
 		None = 0,

@@ -16,7 +16,8 @@
         [Editable(false)]
         public int ReadonlyInt { get; set; }
 
-        public float? ReadonlyNullableFloat { get; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        public float? ReadonlyNullableFloat { get; private set; }
 
         public SubEntity SubEntity { get; set; }
 
