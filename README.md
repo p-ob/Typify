@@ -137,7 +137,7 @@ declare module 'typify-test' {
 	export interface GenericClass<T,T2> {
 		genericProperty: T;
 		genericProperties2: T2[];
-		dictionaryMap: { [ key: string]: number; };
+		dictionaryMap: { [key: string]: number; };
 	}
 	export enum SomeEnum {
 		None = 0,

@@ -86,7 +86,7 @@
                         {
                             var typeScriptKeyType = MapTypeToTypeScriptType(keyType);
                             var typeScriptValueType = MapTypeToTypeScriptType(valueType);
-                            return $"{{ [ key: {typeScriptKeyType}]: {typeScriptValueType}; }}";
+                            return $"{{ [key: {typeScriptKeyType}]: {typeScriptValueType}; }}";
                         }
                         return "Object";
                     }
