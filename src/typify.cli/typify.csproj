@@ -6,8 +6,17 @@
     <PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
     <Description>Typify Command Line Interface tooling</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>Typify.NET.Cli</RootNamespace>
+    <SignAssembly>False</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Typify.NET\Typify.NET.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="commands\typify-generate\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ seamless integration of ASP.NET server-side and TypeScript client-side models
 1. Support nullable (e.g. int?) and "readonly" properties based on DataAnnotations, lack of public setters, or readonly modifiers
 1. Generate complex generic interfaces to support generic typings
 1. Choose how to format property names (assumes C# standard of PascalCase):
-	1. PascalCase
+	1. Copy the C# class names as is
 	1. camelCase (Default)
 	1. snake_case
 
@@ -24,6 +24,8 @@ Typify builds TypeScript definitions for TypeScript 2.0 and later.
 ``` csharp
 namespace Typify.Test
 {
+	using Typify.NET;
+
 	// mark type to "Typify" using TypifyAttribute
     [Typify(typeof(Entity))]
     public class EntityConsumer

@@ -5,7 +5,7 @@
 
     internal class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.WriteLine("Typification commencing.");
             Typifier.Typify(new TypifyOptions

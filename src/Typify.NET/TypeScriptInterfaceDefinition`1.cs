@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Typify.NET.Utilities;
 
     internal class TypeScriptInterfaceDefinition<T> : TypeScriptInterfaceDefinition where T : class
     {
@@ -33,7 +34,7 @@
 
         private IEnumerable<TypeScriptProperty> GetTypescriptProperties()
         {
-            var properties = Source.GetProperties(Utilities.PropertyBindingFlags).Distinct();
+            var properties = Source.GetProperties(TypeUtils.PropertyBindingFlags).Distinct();
             return properties.Select(p => new TypeScriptProperty(p, _options));
         }
     }

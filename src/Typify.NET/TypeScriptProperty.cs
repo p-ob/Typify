@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Reflection;
+    using Typify.NET.Utilities;
 
     internal class TypeScriptProperty
     {
@@ -63,16 +64,16 @@
             try
             {
                 // handle defined mappings
-                if (Utilities.DotNetTypeToTypeScriptTypeLookup.Contains(type))
+                if (TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(type))
                 {
-                    return Utilities.DotNetTypeToTypeScriptTypeLookup[type].First();
+                    return TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup[type].First();
                 }
 
                 var typeInfo = type.GetTypeInfo();
                 var numberTypes =
-                    Utilities.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("number")).Select(t => t.Key);
+                    TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("number")).Select(t => t.Key);
                 var stringTypes =
-                    Utilities.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string")).Select(t => t.Key);
+                    TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string")).Select(t => t.Key);
 
                 // Dictionaries => map or Object
                 if (typeof(IDictionary).IsAssignableFrom(type))

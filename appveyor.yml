@@ -3,10 +3,10 @@ os: Visual Studio 2017 RC
 cache: C:\Users\appveyor\.dnx\packages
 build_script:
 - ps: >-
-    dotnet restore src\Typify.NET
+    dotnet restore src\Typify.NET\Typify.NET.csproj
 
-    dotnet build src\Typify.NET --configuration Release
+    dotnet build src\Typify.NET\Typify.NET.csproj --configuration Release
 
-    dotnet restore src\typify.cli
+    dotnet restore src\typify.cli\typify.csproj
 
-    dotnet build src\typify.cli --configuration Release
+    dotnet build src\typify.cli\typify.csproj --configuration Release

@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Typify.NET.Utilities;
 
     public static class Typifier
     {
@@ -80,10 +81,10 @@
         private static IEnumerable<Type> GetPropertyTypesToTypify(Type type)
         {
             var propertyTypes =
-                type.GetProperties(Utilities.PropertyBindingFlags)
+                type.GetProperties(TypeUtils.PropertyBindingFlags)
                     .Where(
                         p =>
-                            !(Utilities.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
+                            !(TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
                               p.PropertyType.IsSystemType()))
                     .Select(t => t.PropertyType)
                     .ToList();

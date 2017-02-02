@@ -1,10 +1,10 @@
-﻿namespace typify
+﻿namespace Typify.NET.Cli
 {
     using System;
 
     internal class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
         }
