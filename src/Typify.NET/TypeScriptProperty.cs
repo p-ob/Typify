@@ -40,7 +40,7 @@
             _options = options;
         }
 
-        public string ToTypescriptString()
+        public string ToTypeScriptString()
         {
             return $"{(IsReadonly ? "readonly " : "")}{Name}{(IsNullable ? "?" : "")}: {Type};";
         }

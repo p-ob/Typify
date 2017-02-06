@@ -100,7 +100,7 @@
             {
                 var imports = GenerateTypeScriptImports(namespacedDefinition.OfType<TypeScriptInterfaceDefinition>());
                 typeScriptFileContents +=
-                    $"declare module '{namespacedDefinition.Key}' {{\n{imports}{string.Join("\n", namespacedDefinition.Select(d => d.ToTypescriptString(1)))}\n}}\n";
+                    $"declare module '{namespacedDefinition.Key}' {{\n{imports}{string.Join("\n", namespacedDefinition.Select(d => d.ToTypeScriptString(1)))}\n}}\n";
             }
 
             var file =

@@ -15,17 +15,17 @@
 
         public string Name => Source.Name;
 
-        public string ToTypescriptString(int startTabIndex = 0)
+        public string ToTypeScriptString(int startTabIndex = 0)
         {
             var tabsString = new string('\t', startTabIndex);
             return
-                $"{tabsString}export enum {Name} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", EnumValueNames.Select(FormatEnumValue))}\n{tabsString}}}";
+                $"{tabsString}export enum {Name} {{\n{tabsString}\t{string.Join($",\n{tabsString}\t", EnumValueNames.Select(FormatEnumValue))}\n{tabsString}}}";
         }
 
         private string FormatEnumValue(string enumValueName)
         {
             var value = GetEnumValue(enumValueName);
-            return $"{enumValueName} = {value},";
+            return $"{enumValueName} = {value}";
         }
 
         private object GetEnumValue(string enumValueName)

@@ -6,6 +6,6 @@
 
         string Namespace { get; }
 
-        string ToTypescriptString(int startTabIndex = 0);
+        string ToTypeScriptString(int startTabIndex = 0);
     }
 }

@@ -9,7 +9,7 @@
         public virtual string Namespace { get; set; }
         public virtual IEnumerable<TypeScriptProperty> Properties { get; set; }
         public virtual IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
-        public virtual string ToTypescriptString(int startTabIndex = 0)
+        public virtual string ToTypeScriptString(int startTabIndex = 0)
         {
             throw new NotImplementedException();
         }

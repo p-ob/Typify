@@ -25,11 +25,11 @@
             _options = options ?? new TypifyOptions();
         }
 
-        public override string ToTypescriptString(int startTabIndex = 0)
+        public override string ToTypeScriptString(int startTabIndex = 0)
         {
             var tabsString = new string('\t', startTabIndex);
             return
-                $"{tabsString}export interface {Name} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypescriptString()))}\n{tabsString}}}";
+                $"{tabsString}export interface {Name} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypeScriptString()))}\n{tabsString}}}";
         }
 
         private IEnumerable<TypeScriptProperty> GetTypescriptProperties()

@@ -5,8 +5,6 @@ build_script:
 - ps: >-
     dotnet restore src\Typify.NET\Typify.NET.csproj
 
-    dotnet build src\Typify.NET\Typify.NET.csproj --configuration Release
-
     dotnet restore src\typify.cli\typify.csproj
 
-    dotnet build src\typify.cli\typify.csproj --configuration Release
+    dotnet build --configuration Release
