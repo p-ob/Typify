@@ -76,7 +76,7 @@
                     TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string")).Select(t => t.Key);
 
                 // Dictionaries => map or Object
-                if (typeof(IDictionary).IsAssignableFrom(type))
+                if (typeof(IDictionary).GetTypeInfo().IsAssignableFrom(type))
                 {
                     var underlyingTypes = typeInfo.GenericTypeArguments;
                     if (underlyingTypes != null && underlyingTypes.Length == 2)
@@ -94,7 +94,7 @@
                 }
 
                 // IEnumerable => []{type}
-                if (typeof(IEnumerable).IsAssignableFrom(type))
+                if (typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type))
                 {
                     var underlyingTypes = typeInfo.GenericTypeArguments;
                     if (underlyingTypes != null && underlyingTypes.Length == 1)
@@ -112,7 +112,7 @@
                 if (typeInfo.IsGenericType)
                 {
                     var name = type.GetNameWithoutGenericArity();
-                    return $"{name}<{string.Join(",", type.GetGenericArguments().Select(MapTypeToTypeScriptType))}>";
+                    return $"{name}<{string.Join(",", type.GetTypeInfo().GetGenericArguments().Select(MapTypeToTypeScriptType))}>";
                 }
 
                 // assume complex objects have TypeScript definitions created

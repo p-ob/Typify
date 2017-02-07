@@ -11,6 +11,7 @@
     {
         public static void Typify(TypifyOptions options)
         {
+            options = options ?? new TypifyOptions();
             var typesToTypify = GetTypesToTypify();
             var typeScriptDefinitions = new List<ITypeScriptDefinition>();
 
@@ -81,7 +82,7 @@
         private static IEnumerable<Type> GetPropertyTypesToTypify(Type type)
         {
             var propertyTypes =
-                type.GetProperties(TypeUtils.PropertyBindingFlags)
+                type.GetTypeInfo().GetProperties(TypeUtils.PropertyBindingFlags)
                     .Where(
                         p =>
                             !(TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||

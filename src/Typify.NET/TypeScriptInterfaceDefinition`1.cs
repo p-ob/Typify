@@ -16,7 +16,7 @@
 
         public override string Name => Source.Name;
 
-        public override IEnumerable<TypeScriptProperty> Properties => GetTypescriptProperties();
+        public override IEnumerable<TypeScriptProperty> Properties => GetTypeScriptProperties();
 
         public override IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
 
@@ -32,9 +32,9 @@
                 $"{tabsString}export interface {Name} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypeScriptString()))}\n{tabsString}}}";
         }
 
-        private IEnumerable<TypeScriptProperty> GetTypescriptProperties()
+        private IEnumerable<TypeScriptProperty> GetTypeScriptProperties()
         {
-            var properties = Source.GetProperties(TypeUtils.PropertyBindingFlags).Distinct();
+            var properties = Source.GetTypeInfo().GetProperties(TypeUtils.PropertyBindingFlags).Distinct();
             return properties.Select(p => new TypeScriptProperty(p, _options));
         }
     }

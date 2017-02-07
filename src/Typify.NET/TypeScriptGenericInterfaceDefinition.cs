@@ -16,7 +16,7 @@
 
         public override string Name => Source.GetNameWithoutGenericArity();
 
-        public override IEnumerable<TypeScriptProperty> Properties => GetTypescriptProperties();
+        public override IEnumerable<TypeScriptProperty> Properties => GetTypeScriptProperties();
 
         public override IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
 
@@ -34,12 +34,12 @@
 
         private string GetGenericArgumentsString()
         {
-            return string.Join(",", Source.GetGenericArguments().Select(arg => arg.Name));
+            return string.Join(",", Source.GetTypeInfo().GetGenericArguments().Select(arg => arg.Name));
         }
 
-        private IEnumerable<TypeScriptProperty> GetTypescriptProperties()
+        private IEnumerable<TypeScriptProperty> GetTypeScriptProperties()
         {
-            var properties = Source.GetProperties(TypeUtils.PropertyBindingFlags).Distinct();
+            var properties = Source.GetTypeInfo().GetProperties(TypeUtils.PropertyBindingFlags).Distinct();
             return properties.Select(p => new TypeScriptProperty(p, _options));
         }
     }
