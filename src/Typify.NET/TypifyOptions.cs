@@ -1,18 +1,21 @@
 ﻿namespace Typify.NET
 {
-    public class TypifyOptions
-    {
-        public NamingStrategy NamingStrategy { get; set; }
+	public class TypifyOptions
+	{
+		public NamingStrategy NamingStrategy { get; set; }
 
-        public bool OneFilePerNamespace { get; set; }
+		public bool OneFilePerNamespace { get; set; }
 
-        public string Destination { get; set; }
+		public string Destination { get; set; }
 
-        public TypifyOptions()
-        {
-            NamingStrategy = NamingStrategy.CamelCase;
-            OneFilePerNamespace = false;
-            Destination = string.Empty;
-        }
-    }
+		public string AssemblyName { get; set; }
+
+		public TypifyOptions()
+		{
+			NamingStrategy = NamingStrategy.CamelCase;
+			OneFilePerNamespace = false;
+			Destination = string.Empty;
+			AssemblyName = string.Empty;
+		}
+	}
 }

@@ -1,28 +1,28 @@
 ﻿namespace Typify.Test
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
+	using System;
+	using System.ComponentModel.DataAnnotations;
 
-    public class Entity
-    {
-        public int Id { get; set; }
+	public class Entity
+	{
+		public int Id { get; set; }
 
-        public string Name { get; set; }
+		public string Name { get; set; }
 
-        public DateTime DateTime { get; set; }
+		public DateTime DateTime { get; set; }
 
-        public int? NullableInt { get; set; }
+		public int? NullableInt { get; set; }
 
-        [Editable(false)]
-        public int ReadonlyInt { get; set; }
+		[Editable(false)]
+		public int ReadonlyInt { get; set; }
 
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        public float? ReadonlyNullableFloat { get; private set; }
+		// ReSharper disable once UnusedAutoPropertyAccessor.Local
+		public float? ReadonlyNullableFloat { get; private set; }
 
-        public SubEntity SubEntity { get; set; }
+		public SubEntity SubEntity { get; set; }
 
-        public GenericClass<int, string> GenericClass { get; set; }
+		public GenericClass<int, string> GenericClass { get; set; }
 
-        private int _notPublic;
-    }
+		private int _notPublic;
+	}
 }

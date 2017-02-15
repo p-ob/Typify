@@ -1,22 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RepositoryUrl>https://github.com/p-ob/Typify</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
-    <Description>Typify Command Line Interface tooling</Description>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <RootNamespace>Typify.NET.Cli</RootNamespace>
-    <SignAssembly>False</SignAssembly>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Typify.NET\Typify.NET.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="commands\typify-generate\" />
-    <Folder Include="Utilities\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp1.1</TargetFramework>
+		<AssemblyName>typify</AssemblyName>
+		<RepositoryUrl>https://github.com/p-ob/Typify</RepositoryUrl>
+		<PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
+		<Description>Typify Command Line Interface tooling</Description>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<RootNamespace>Typify.NET.Cli</RootNamespace>
+		<SignAssembly>True</SignAssembly>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Typify.NET\Typify.NET.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
+	</ItemGroup>
 </Project>

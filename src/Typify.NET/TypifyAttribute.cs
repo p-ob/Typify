@@ -1,15 +1,15 @@
 ﻿namespace Typify.NET
 {
-    using System;
+	using System;
 
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
-    public class TypifyAttribute : Attribute
-    {
-        public Type Type { get; }
+	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+	public class TypifyAttribute : Attribute
+	{
+		public Type Type { get; }
 
-        public TypifyAttribute(Type type)
-        {
-            Type = type;
-        }
-    }
+		public TypifyAttribute(Type type)
+		{
+			Type = type;
+		}
+	}
 }
