@@ -1,4 +1,4 @@
-﻿namespace Typify.NET.Utilities
+﻿namespace Typify.NET.Utils
 {
 	using System;
 	using System.Reflection;

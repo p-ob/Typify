@@ -5,7 +5,7 @@
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
-	using Typify.NET.Utilities;
+	using Typify.NET.Utils;
 
 	public static class Typifier
 	{

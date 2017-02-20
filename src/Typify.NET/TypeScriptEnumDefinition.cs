@@ -3,7 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Typify.NET.Utilities;
+	using Typify.NET.Utils;
 
 	internal class TypeScriptEnumDefinition<T> : ITypeScriptDefinition where T : struct, IConvertible
 	{

@@ -4,7 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
-	using Typify.NET.Utilities;
+	using Typify.NET.Utils;
 
 	internal class TypeScriptInterfaceDefinition<T> : TypeScriptInterfaceDefinition where T : class
 	{

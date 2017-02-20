@@ -4,6 +4,7 @@ Convert .NET classes into properly mapped TypeScript definitions to support
 seamless integration of ASP.NET server-side and TypeScript client-side models
 
 ## Features
+
 1. Map base .NET objects (int, string, etc.) into their TypeScript counterparts (number, string, etc.)
 1. Generate namespaces for each unique namespace
 	- Note that it converts "Some.DotNet.Namespace" to "some-dotnet-namespace"
@@ -13,5 +14,6 @@ seamless integration of ASP.NET server-side and TypeScript client-side models
 1. Generate complex generic interfaces to support generic typings
 
 ## Requirements
+
 * Typify.NET targets .NET Standard 1.6, and supports [these target frameworks](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard1.6.md).  
 * Typify.NET generates TypeScript definitions for TypeScript 2.0 and later.  
