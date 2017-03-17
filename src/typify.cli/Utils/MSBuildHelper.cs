@@ -1,14 +1,14 @@
-﻿namespace Typify.NET.Cli.Utils
+﻿namespace Typify.NET.Tools.Utils
 {
-	using System;
-	using System.Collections.Generic;
-	using System.IO;
-	using System.Linq;
-	using Microsoft.Build.Construction;
-	using Microsoft.Build.Evaluation;
-	using Microsoft.Build.Exceptions;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using Microsoft.Build.Construction;
+    using Microsoft.Build.Evaluation;
+    using Microsoft.Build.Exceptions;
 
-	internal static class MSBuildHelper
+    internal static class MSBuildHelper
     {
 	    private const string MSBuildAssemblyNameProperty = "AssemblyName";
 

@@ -1,4 +1,4 @@
-﻿namespace Typify.NET.Cli.Help
+﻿namespace Typify.NET.Tools.Help
 {
 	internal static class LocalizableStrings
 	{

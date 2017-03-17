@@ -1,11 +1,11 @@
-﻿namespace Typify.NET.Cli.Generate
+﻿namespace Typify.NET.Tools.Generate
 {
-	using System;
-	using System.IO;
-	using Microsoft.Extensions.CommandLineUtils;
-	using Typify.NET.Cli.Utils;
+    using System;
+    using System.IO;
+    using Microsoft.Extensions.CommandLineUtils;
+    using Typify.NET.Tools.Utils;
 
-	internal class GenerateCommand
+    internal class GenerateCommand
     {
         public static int Run(string[] args)
         {
@@ -20,11 +20,11 @@
             var projectArgument = app.Argument($"<{LocalizableStrings.ProjectArgumentName}>",
                 LocalizableStrings.ProjectArgumentDescription);
 
-	        var namingStrategyOption = app.Option($"--naming-strategy <{LocalizableStrings.ProjectArgumentName}>",
-		        LocalizableStrings.ProjectArgumentDescription, CommandOptionType.SingleValue);
+	        var namingStrategyOption = app.Option($"--naming-strategy <{LocalizableStrings.NamingStrategyOptionName}>",
+		        LocalizableStrings.NamingStrategyOptionDescription, CommandOptionType.SingleValue);
 	        var destinationOption = app.Option($"-d|--destination <{LocalizableStrings.DestinationOptionName}>",
 		        LocalizableStrings.DestinationOptionDescription, CommandOptionType.SingleValue);
-	        var oneFilePerNamespaceOption = app.Option("--multiple-files",
+	        var oneFilePerNamespaceOption = app.Option($"--multiple-files <{LocalizableStrings.MultipleFilesOptionName}>",
 		        LocalizableStrings.MultipleFilesOptionDescription, CommandOptionType.NoValue);
 
 			app.OnExecute(() =>
@@ -60,9 +60,9 @@
 			return app.Execute(args);
         }
 
-	    private static NamingStrategy MapStringToNamingStrategyOption(string str)
+	    private static NamingStrategy MapStringToNamingStrategyOption(string namingStrategyOptionStr)
 	    {
-		    switch (str)
+		    switch (namingStrategyOptionStr)
 		    {
 				case "camel":
 				case "camelcase":

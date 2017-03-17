@@ -1,8 +1,8 @@
-﻿namespace Typify.NET.Cli.Utils
+﻿namespace Typify.NET.Tools.Utils
 {
-	using Microsoft.Extensions.CommandLineUtils;
+    using Microsoft.Extensions.CommandLineUtils;
 
-	internal static class Reporter
+    internal static class Reporter
 	{
 		public static readonly AnsiConsole Error;
 		public static readonly AnsiConsole Output;

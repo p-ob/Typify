@@ -1,4 +1,4 @@
-﻿namespace Typify.NET.Cli.Utils
+﻿namespace Typify.NET.Tools.Utils
 {
     internal static class Context
     {

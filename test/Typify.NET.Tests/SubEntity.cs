@@ -3,7 +3,7 @@
 	using System.Collections.Generic;
 	using Some.Other.Namespace;
 
-	public class SubEntity
+    public class SubEntity
 	{
 		public int Id { get; set; }
 

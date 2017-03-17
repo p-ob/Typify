@@ -1,13 +1,13 @@
-﻿namespace Typify.NET.Cli
+﻿namespace Typify.NET.Tools
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using Typify.NET.Cli.Generate;
-	using Typify.NET.Cli.Help;
-	using Typify.NET.Cli.Utils;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Typify.NET.Tools.Generate;
+    using Typify.NET.Tools.Help;
+    using Typify.NET.Tools.Utils;
 
-	public class Program
+    public class Program
 	{
 		private static readonly Dictionary<string, Func<string[], int>> BuiltIns = new Dictionary<string, Func<string[], int>>
 		{
@@ -88,14 +88,10 @@
 			return exitCode;
 		}
 
-		private static bool IsArg(string candidate, string longName)
+	    private static bool IsArg(string candidate, string shortName, string longName)
 		{
-			return IsArg(candidate, null, longName);
-		}
-
-		private static bool IsArg(string candidate, string shortName, string longName)
-		{
-			return (shortName != null && candidate.Equals("-" + shortName)) || (longName != null && candidate.Equals("--" + longName));
+		    return shortName != null && candidate.Equals($"-{shortName}") ||
+		           longName != null && candidate.Equals($"--{longName}");
 		}
 	}
 }

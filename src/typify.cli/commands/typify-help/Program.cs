@@ -1,9 +1,9 @@
-﻿namespace Typify.NET.Cli.Help
+﻿namespace Typify.NET.Tools.Help
 {
-	using Microsoft.Extensions.CommandLineUtils;
-	using Typify.NET.Cli.Utils;
+    using Microsoft.Extensions.CommandLineUtils;
+    using Typify.NET.Tools.Utils;
 
-	internal class HelpCommand
+    internal class HelpCommand
 	{
 		public static int Run(string[] args)
 		{
