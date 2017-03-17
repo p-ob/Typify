@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E37BBC81
 		build\common.props = build\common.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{58DEC783-3947-46F2-A875-0B05E2547B9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{227FB6A2-EB13-4582-A40D-88F01A673DF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,5 +89,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E8C64AEA-02FB-4E88-A3EA-74FBAD09E05B} = {227FB6A2-EB13-4582-A40D-88F01A673DF4}
+		{285F9AEA-E891-41A7-A654-96F3921CB01E} = {58DEC783-3947-46F2-A875-0B05E2547B9C}
+		{47D40DD1-750D-400F-9644-FFBADA330CDD} = {227FB6A2-EB13-4582-A40D-88F01A673DF4}
+		{6C50A1A1-C151-4E57-BC4B-15337490AD01} = {227FB6A2-EB13-4582-A40D-88F01A673DF4}
 	EndGlobalSection
 EndGlobal
