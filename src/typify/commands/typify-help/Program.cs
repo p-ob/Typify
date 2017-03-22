@@ -4,23 +4,23 @@
     using Typify.NET.Tools.Utils;
 
     internal class HelpCommand
-	{
-		public static int Run(string[] args)
-		{
-			var app = new CommandLineApplication(false)
-			{
-				Name = "typify help",
-				FullName = LocalizableStrings.AppFullName,
-				Description = LocalizableStrings.AppDescription
-			};
+    {
+        public static int Run(string[] args)
+        {
+            var app = new CommandLineApplication(false)
+            {
+                Name = "typify help",
+                FullName = LocalizableStrings.AppFullName,
+                Description = LocalizableStrings.AppDescription
+            };
 
-			app.OnExecute(() =>
-			{
-				Reporter.Output.WriteLine("TODO");
-				return 0;
-			});
+            app.OnExecute(() =>
+            {
+                Reporter.Output.WriteLine("TODO");
+                return 0;
+            });
 
-			return app.Execute(args);
-		}
-	}
+            return app.Execute(args);
+        }
+    }
 }

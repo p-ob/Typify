@@ -11,7 +11,7 @@
 		<RootNamespace>Typify.NET.Tools</RootNamespace>
 		<SignAssembly>True</SignAssembly>
     <OutputType>Exe</OutputType>
-    <AssemblyName Condition="'$(Platform)' == 'x86'">ef.x86</AssemblyName>
+    <AssemblyName Condition="'$(Platform)' == 'x86'">typify.x86</AssemblyName>
     <IsPackable>false</IsPackable>
     <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
 	</PropertyGroup>

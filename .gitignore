@@ -1,4 +1,9 @@
+# Folders
 bin/
 obj/
-*.ts
 .vscode/
+packages/
+
+# File extensions
+*.ts
+*.log

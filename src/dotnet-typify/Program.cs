@@ -2,8 +2,9 @@ namespace Typify.NET.Tools
 {
     public class Program
     {
-        public void TestMethod1()
+        public static int Main(string[] args)
         {
+            return 0;
         }
     }
 }

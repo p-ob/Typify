@@ -5,6 +5,9 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>netcoreapp1.1</TargetFramework>
+		<IsPackable>false</IsPackable>
+    <AssemblyName>Typify.NET.Tests</AssemblyName>
+    <RootNamespace>Typify.NET</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Typify.NET\Typify.NET.csproj" />

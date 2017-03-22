@@ -1,9 +1,9 @@
 ﻿namespace Typify.NET.Tools.Help
 {
-	internal static class LocalizableStrings
-	{
-		public const string AppDescription = "Get help with the Typify CLI.";
+    internal static class LocalizableStrings
+    {
+        public const string AppDescription = "Get help with the Typify CLI.";
 
-		public const string AppFullName = "Typify.NET Help";
-	}
+        public const string AppFullName = "Typify.NET Help";
+    }
 }

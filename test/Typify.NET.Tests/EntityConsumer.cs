@@ -1,13 +1,11 @@
-﻿namespace Typify.Test
+﻿namespace Typify.NET.Tests
 {
-	using Typify.NET;
-
-	[Typify(typeof(Entity))]
-	public class EntityConsumer
-	{
-		public Entity Get()
-		{
-			return new Entity();
-		}
-	}
+    [Typify(typeof(Entity))]
+    public class EntityConsumer
+    {
+        public Entity Get()
+        {
+            return new Entity();
+        }
+    }
 }
