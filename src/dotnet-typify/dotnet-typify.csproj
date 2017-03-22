@@ -7,7 +7,4 @@
     <RootNamespace>Typify.NET.Tools</RootNamespace>
     <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\DotNetTypify.targets" />
-  </ItemGroup>
 </Project>
