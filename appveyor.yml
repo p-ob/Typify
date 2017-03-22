@@ -5,3 +5,6 @@ build_script:
   - dotnet restore
   - dotnet build --configuration Release /p:BuildNumber=%APPVEYOR_BUILD_NUMBER%
   - dotnet pack -c Release -o packages --no-build  
+
+ test_script:
+   - dotnet test test/typify.Tests/typify.Tests.csproj
