@@ -1,4 +1,4 @@
-namespace Typify.NET.Tools
+namespace Typify.NET.Tools.Tests
 {
     using Xunit;
 

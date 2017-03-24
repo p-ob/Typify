@@ -3,8 +3,8 @@
   <PropertyGroup>    
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
     <RootNamespace>Typify.NET.Tools</RootNamespace>
-    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
+    <PackageTags>typify</PackageTags>
+    <PackageType>DotnetCliTool</PackageType>
   </PropertyGroup>
 </Project>

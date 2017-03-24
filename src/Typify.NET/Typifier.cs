@@ -10,12 +10,14 @@
 
     public static class Typifier
     {
+        public static readonly string DefaultTypeScriptDefinitionFilename = "typified.d.ts";
+
         public static void Typify(TypifyOptions options)
         {
             options = options ?? new TypifyOptions();
             if (string.IsNullOrEmpty(options.AssemblyFile))
             {
-                throw new Exception("Need assembly file");
+                throw new TypifyInvalidOptionException(nameof(options.AssemblyFile), options.AssemblyFile, "Need assembly file");
             }
             var typesToTypify = GetTypesToTypify(options.AssemblyFile);
             var typeScriptDefinitions = new List<ITypeScriptDefinition>();
@@ -48,16 +50,23 @@
             {
                 var assemblyName = AssemblyLoadContext.GetAssemblyName(assemblyFile);
                 var entryAssembly = Assembly.GetEntryAssembly();
-                var matchingAssembly =
-                    entryAssembly.GetReferencedAssemblies()
-                        .FirstOrDefault(a => string.Equals(a.ToString(), assemblyName.ToString()));
-                if (matchingAssembly != null)
+                if (string.Equals(entryAssembly.GetName().ToString(), assemblyName.ToString()))
                 {
-                    assembly = Assembly.Load(matchingAssembly);
+                    assembly = entryAssembly;
                 }
                 else
                 {
-                    throw;
+                    var matchingAssembly =
+                        entryAssembly.GetReferencedAssemblies()
+                            .FirstOrDefault(a => string.Equals(a.ToString(), assemblyName.ToString()));
+                    if (matchingAssembly != null)
+                    {
+                        assembly = Assembly.Load(matchingAssembly);
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
@@ -131,13 +140,32 @@
                     $"declare module '{namespacedDefinition.Key}' {{\n{imports}{string.Join("\n", namespacedDefinition.Select(d => d.ToTypeScriptString(1)))}\n}}\n";
             }
 
-            var file =
-                $"{destination}{(destination.EndsWith("/") || destination == string.Empty ? string.Empty : "/")}typified.d.ts";
+            var file = GetDestination(destination);
             var stream = File.Create(file);
             using (var tw = new StreamWriter(stream))
             {
                 tw.Write(typeScriptFileContents);
             }
+        }
+
+        private static string GetDestination(string destination)
+        {
+            if (string.IsNullOrEmpty(destination))
+            {
+                return DefaultTypeScriptDefinitionFilename;
+            }
+            var extension = Path.GetExtension(destination);
+            if (string.Equals(extension, ".ts"))
+            {
+                return destination;
+            }
+            if (!string.IsNullOrEmpty(extension))
+            {
+                throw new TypifyInvalidOptionException(nameof(TypifyOptions.Destination), destination,
+                    "Not a valid file path. Needs to be a TypeScript or TypeScript definition file (e.g. *.ts or *.d.ts");
+            }
+
+            return $"{(Path.IsPathRooted(destination) ? string.Empty : Directory.GetCurrentDirectory())}/{destination}/{DefaultTypeScriptDefinitionFilename}";
         }
 
         private static string GenerateTypeScriptImports(IEnumerable<TypeScriptInterfaceDefinition> namespacedDefinitions)
@@ -149,13 +177,11 @@
                 .Where(p => p.IsImport)
                 .DistinctBy(p => new { p.Name, p.Namespace });
             var groupedByNamespaceImportedProperties = distinctImports.GroupBy(p => p.Namespace);
-            foreach (var groupedByNamespaceImport in groupedByNamespaceImportedProperties)
-            {
-                importString +=
-                    $"\timport {{ {string.Join(", ", groupedByNamespaceImport.Select(p => p.Type))} }} from '{groupedByNamespaceImport.Key}';\n";
-            }
 
-            return importString;
+            return groupedByNamespaceImportedProperties.Aggregate(importString,
+                (current, groupedByNamespaceImport) =>
+                    current +
+                    $"\timport {{ {string.Join(", ", groupedByNamespaceImport.Select(p => p.Type))} }} from '{groupedByNamespaceImport.Key}';\n");
         }
     }
 }
