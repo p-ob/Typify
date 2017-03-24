@@ -43,6 +43,28 @@
         }
 
         [Fact]
+        public void Typify_InvalidFileType_ThrowsTypifyInvalidOptionException_Test()
+        {
+            var destination = "TestDestination/notatypescriptfile.cs";
+            var typifyOptions = new TypifyOptions
+            {
+                AssemblyFile = AssemblyFile,
+                Destination = destination
+            };
+
+            try
+            {
+                Typifier.Typify(typifyOptions);
+                Assert.False(true, $"Did not throw {nameof(TypifyInvalidOptionException)}");
+            }
+            catch (TypifyInvalidOptionException e)
+            {
+                Assert.True(string.Equals(e.OptionName, nameof(TypifyOptions.Destination)),
+                    $"Threw unexpected {nameof(TypifyInvalidOptionException)}");
+            }
+        }
+
+        [Fact]
         public void Typify_NoAssemblyFile_ThrowsTypifyInvalidOptionException_Test()
         {
             var typifyOptions = new TypifyOptions();
