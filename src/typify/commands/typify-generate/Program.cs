@@ -1,7 +1,6 @@
 ﻿namespace Typify.NET.Tools.Generate
 {
     using System;
-    using System.IO;
     using Microsoft.Extensions.CommandLineUtils;
     using Typify.NET.Tools.Utils;
 

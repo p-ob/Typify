@@ -135,7 +135,7 @@
                     $"declare module '{namespacedDefinition.Key}' {{\n{imports}{string.Join("\n", namespacedDefinition.Select(d => d.ToTypeScriptString(1)))}\n}}\n";
             }
 
-            var file = GetDestination(destination);
+            var file = GetFileDestination(destination);
             var stream = File.Create(file);
             using (var tw = new StreamWriter(stream))
             {
@@ -143,24 +143,36 @@
             }
         }
 
-        private static string GetDestination(string destination)
+        private static string GetFileDestination(string destination)
         {
+            string fileDestination;
             if (string.IsNullOrEmpty(destination))
             {
-                return DefaultTypeScriptDefinitionFilename;
+                fileDestination = DefaultTypeScriptDefinitionFilename;
             }
-            var extension = Path.GetExtension(destination);
-            if (string.Equals(extension, ".ts"))
+            else 
             {
-                return destination;
-            }
-            if (!string.IsNullOrEmpty(extension))
-            {
-                throw new TypifyInvalidOptionException(nameof(TypifyOptions.Destination), destination,
-                    "Not a valid file path. Needs to be a TypeScript or TypeScript definition file (e.g. *.ts or *.d.ts");
+                var extension = Path.GetExtension(destination);
+                if (string.Equals(extension, ".ts"))
+                {
+                    fileDestination = destination;
+                }
+                else if (!string.IsNullOrEmpty(extension))
+                {
+                    throw new TypifyInvalidOptionException(nameof(TypifyOptions.Destination), destination,
+                        "Not a valid file path. Needs to be a TypeScript or TypeScript definition file (e.g. *.ts or *.d.ts");
+                }
+                else 
+                {
+                    fileDestination = $"{(Path.IsPathRooted(destination) ? string.Empty : Directory.GetCurrentDirectory())}/{destination}/{DefaultTypeScriptDefinitionFilename}";
+                }
             }
 
-            return $"{(Path.IsPathRooted(destination) ? string.Empty : Directory.GetCurrentDirectory())}/{destination}/{DefaultTypeScriptDefinitionFilename}";
+            var fileInfo = new FileInfo(fileDestination);
+            // ensure the directory exists
+            fileInfo.Directory.Create();
+
+            return fileDestination;
         }
 
         private static string GenerateTypeScriptImports(IEnumerable<TypeScriptInterfaceDefinition> namespacedDefinitions)

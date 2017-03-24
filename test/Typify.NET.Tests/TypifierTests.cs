@@ -28,6 +28,21 @@
         }
 
         [Fact]
+        public void Typify_GenerateFileDestination_Test()
+        {
+            var destination = "TestDestination/";
+            var typifyOptions = new TypifyOptions
+            {
+                AssemblyFile = AssemblyFile,
+                Destination = destination
+            };
+
+            Typifier.Typify(typifyOptions);
+
+            Assert.True(File.Exists($"{destination}{Typifier.DefaultTypeScriptDefinitionFilename}"), "Did not generate expected file.");
+        }
+
+        [Fact]
         public void Typify_NoAssemblyFile_ThrowsTypifyInvalidOptionException_Test()
         {
             var typifyOptions = new TypifyOptions();

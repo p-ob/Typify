@@ -7,12 +7,22 @@
     using Typify.NET.Tools.Help;
     using Typify.NET.Tools.Utils;
 
-    public class Program
+    public static class Program
     {
         private static readonly Dictionary<string, Func<string[], int>> BuiltIns = new Dictionary<string, Func<string[], int>>
         {
             ["generate"] = GenerateCommand.Run
         };
+
+        private static readonly AppArg VerboseArg;
+        private static readonly AppArg HelpArg;
+
+        static Program()
+        {
+            VerboseArg = new AppArg("diagnostics", "d");
+            HelpArg = new AppArg("help", "h");
+        }
+
 
         public static int Main(string[] args)
         {
@@ -34,16 +44,16 @@
             var command = string.Empty;
             var arg = string.Empty;
             var lastArg = 0;
-            var exitCode = 1;
+            var exitCode = 0;
 
             for (; lastArg < args.Length; lastArg++)
             {
                 arg = args[lastArg];
-                if (IsArg(arg, "d", "diagnostics"))
+                if (VerboseArg.IsArg(arg))
                 {
                     verbose = true;
                 }
-                else if (IsArg(arg, "h", "help") || arg == "-?" || arg == "/?")
+                else if (HelpArg.IsArg(arg) || arg == "-?" || arg == "/?")
                 {
                     HelpCommand.Run(Array.Empty<string>());
                     return 0;
@@ -60,10 +70,11 @@
                     break;
                 }
             }
+
             if (!success)
             {
                 HelpCommand.Run(Array.Empty<string>());
-                return 1;
+                exitCode = 1;
             }
 
             var appArgs = (lastArg + 1) >= args.Length ? Enumerable.Empty<string>() : args.Skip(lastArg + 1).ToArray();
@@ -78,20 +89,23 @@
                 command = "help";
             }
 
-            if (BuiltIns.TryGetValue(command, out Func<string[], int> builtIn))
+            if (exitCode == 0 && BuiltIns.TryGetValue(command, out Func<string[], int> builtIn))
             {
-                Reporter.Output.WriteLine($"Matched command {command}");
-                exitCode = builtIn(appArgs.ToArray());
+                try
+                {
+                    exitCode = builtIn(appArgs.ToArray());
+                }
+                catch (TypifyException e)
+                {
+                    if (verbose.GetValueOrDefault())
+                    {
+                        Reporter.Error.WriteLine(e.ToString());
+                    }
+                    exitCode = 1;
+                }
             }
 
-            Reporter.Output.WriteLine($"Returning exit code {exitCode}");
             return exitCode;
-        }
-
-        private static bool IsArg(string candidate, string shortName, string longName)
-        {
-            return shortName != null && candidate.Equals($"-{shortName}") ||
-                   longName != null && candidate.Equals($"--{longName}");
         }
     }
 }
