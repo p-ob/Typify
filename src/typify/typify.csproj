@@ -13,7 +13,6 @@
     <OutputType>Exe</OutputType>
     <AssemblyName Condition="'$(Platform)' == 'x86'">typify.x86</AssemblyName>
     <IsPackable>false</IsPackable>
-    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <GenerateSerializationAssemblies></GenerateSerializationAssemblies>
@@ -22,7 +21,6 @@
 		<ProjectReference Include="..\Typify.NET\Typify.NET.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Build" Version="15.1.0-preview-000545-01" />
 		<PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
 	</ItemGroup>
 </Project>
