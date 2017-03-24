@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Loader;
+    using Microsoft.Extensions.DependencyModel;
     using Typify.NET.Utils;
 
     public static class Typifier
@@ -48,25 +49,19 @@
             }
             catch (FileLoadException)
             {
-                var assemblyName = AssemblyLoadContext.GetAssemblyName(assemblyFile);
-                var entryAssembly = Assembly.GetEntryAssembly();
-                if (string.Equals(entryAssembly.GetName().ToString(), assemblyName.ToString()))
+                // check if the assembly is already loaded before throwing
+                var loadedAssemblyNames = DependencyContext.Default.GetDefaultAssemblyNames();
+                var typifyOptionAssemblyName = AssemblyLoadContext.GetAssemblyName(assemblyFile);
+                var matchingAssemblyName =
+                    loadedAssemblyNames.FirstOrDefault(
+                        an => string.Equals(an.Name, typifyOptionAssemblyName.Name));
+                if (matchingAssemblyName != null)
                 {
-                    assembly = entryAssembly;
+                    assembly = Assembly.Load(matchingAssemblyName);
                 }
                 else
                 {
-                    var matchingAssembly =
-                        entryAssembly.GetReferencedAssemblies()
-                            .FirstOrDefault(a => string.Equals(a.ToString(), assemblyName.ToString()));
-                    if (matchingAssembly != null)
-                    {
-                        assembly = Assembly.Load(matchingAssembly);
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
             }
 

@@ -10,8 +10,8 @@
 
         static TypifierTests()
         {
-             var assembly = Assembly.GetEntryAssembly();
-            AssemblyFile = assembly.Location;
+            var thisType = typeof(TypifierTests).GetTypeInfo();
+            AssemblyFile = thisType.Assembly.Location;
         }
 
         [Fact]

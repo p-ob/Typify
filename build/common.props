@@ -7,6 +7,6 @@
     <RepositoryUrl>https://github.com/p-ob/Typify.git</RepositoryUrl>
     <SignAssembly>True</SignAssembly>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <VersionSuffix Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
+    <VersionSuffix Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">$(VersionSuffix).$(BuildNumber)</VersionSuffix>
   </PropertyGroup>
 </Project>
