@@ -12,6 +12,7 @@
   
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Typify.NET\Typify.NET.csproj" />
+		<ProjectReference Include="..\Typify.NET.Tests.Library\Typify.NET.Tests.Library.csproj" />
 	</ItemGroup>
 
   <ItemGroup>

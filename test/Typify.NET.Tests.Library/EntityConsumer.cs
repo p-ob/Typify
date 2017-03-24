@@ -1,4 +1,4 @@
-﻿namespace Typify.NET.Tests
+﻿namespace Typify.NET.Tests.Library
 {
     [Typify(typeof(Entity))]
     public class EntityConsumer

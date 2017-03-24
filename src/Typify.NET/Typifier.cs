@@ -16,10 +16,8 @@
         public static void Typify(TypifyOptions options)
         {
             options = options ?? new TypifyOptions();
-            if (string.IsNullOrEmpty(options.AssemblyFile))
-            {
-                throw new TypifyInvalidOptionException(nameof(options.AssemblyFile), options.AssemblyFile, "Need assembly file");
-            }
+            ValidateOptions(options);
+
             var typesToTypify = GetTypesToTypify(options.AssemblyFile);
             var typeScriptDefinitions = new List<ITypeScriptDefinition>();
 
@@ -150,21 +148,17 @@
             {
                 fileDestination = DefaultTypeScriptDefinitionFilename;
             }
-            else 
+            else
             {
                 var extension = Path.GetExtension(destination);
                 if (string.Equals(extension, ".ts"))
                 {
                     fileDestination = destination;
                 }
-                else if (!string.IsNullOrEmpty(extension))
+                else
                 {
-                    throw new TypifyInvalidOptionException(nameof(TypifyOptions.Destination), destination,
-                        "Not a valid file path. Needs to be a TypeScript or TypeScript definition file (e.g. *.ts or *.d.ts");
-                }
-                else 
-                {
-                    fileDestination = $"{(Path.IsPathRooted(destination) ? string.Empty : Directory.GetCurrentDirectory())}/{destination}/{DefaultTypeScriptDefinitionFilename}";
+                    fileDestination =
+                        $"{(Path.IsPathRooted(destination) ? string.Empty : Directory.GetCurrentDirectory())}/{destination}/{DefaultTypeScriptDefinitionFilename}";
                 }
             }
 
@@ -189,6 +183,20 @@
                 (current, groupedByNamespaceImport) =>
                     current +
                     $"\timport {{ {string.Join(", ", groupedByNamespaceImport.Select(p => p.Type))} }} from '{groupedByNamespaceImport.Key}';\n");
+        }
+
+        private static void ValidateOptions(TypifyOptions options)
+        {
+            if (string.IsNullOrEmpty(options.AssemblyFile))
+            {
+                throw new TypifyInvalidOptionException(nameof(options.AssemblyFile), options.AssemblyFile, "Need assembly file");
+            }
+            var extension = Path.GetExtension(options.Destination);
+            if (!string.IsNullOrEmpty(extension) && !string.Equals(extension, ".ts"))
+            {
+                throw new TypifyInvalidOptionException(nameof(TypifyOptions.Destination), options.Destination,
+                    "Not a valid file path. Needs to be a TypeScript or TypeScript definition file (e.g. *.ts or *.d.ts");
+            }
         }
     }
 }

@@ -10,7 +10,7 @@
 
         static TypifierTests()
         {
-            var thisType = typeof(TypifierTests).GetTypeInfo();
+            var thisType = typeof(Typify.NET.Tests.Library.Entity).GetTypeInfo();
             AssemblyFile = thisType.Assembly.Location;
         }
 
