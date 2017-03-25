@@ -8,5 +8,10 @@
         {
             
         }
+
+        public TypifyException(string message, Exception innerException) : base(message, innerException)
+        {
+            
+        }
     }
 }

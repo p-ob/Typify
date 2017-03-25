@@ -41,8 +41,9 @@
                 case FieldInfo f:
                     Type = f.FieldType;
                     break;
-                default: 
-                    throw new TypifyException("Shit");
+                default:
+                    throw new TypifyException(
+                        $"Typify tried to process a member that wasn't supported. Member type given: {source.GetType()}");
             }
             Name = FormatName();
             Namespace = Type.Namespace.ToTypeScriptNamespace();
@@ -82,14 +83,16 @@
                 }
 
                 var typeInfo = type.GetTypeInfo();
-                var numberTypes =
-                    TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("number")).Select(t => t.Key);
-                var stringTypes =
-                    TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string")).Select(t => t.Key);
-
+                
                 // Dictionaries => map or Object
                 if (typeof(IDictionary).GetTypeInfo().IsAssignableFrom(type))
                 {
+                    var numberTypes =
+                        TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("number"))
+                            .Select(t => t.Key);
+                    var stringTypes =
+                        TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Where(t => t.Contains("string"))
+                            .Select(t => t.Key);
                     var underlyingTypes = typeInfo.GenericTypeArguments;
                     if (underlyingTypes != null && underlyingTypes.Length == 2)
                     {
@@ -104,7 +107,7 @@
                         var targetVersion = new Version(_options.TargetTypeScriptVersion);
                         var ts22Version = new Version(2, 2);
 
-                        // support 2.2 object type
+                        // support 2.2 "object" type
                         return targetVersion.CompareTo(ts22Version) >= 0 ? "object" : "any";
                     }
                 }
