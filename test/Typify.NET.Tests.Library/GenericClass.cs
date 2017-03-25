@@ -9,5 +9,7 @@
         public IEnumerable<T2> GenericProperties2 { get; set; }
 
         public Dictionary<string, int> DictionaryMap { get; set; }
+
+        public Dictionary<object, int> DictionaryObject { get; set; }
     }
 }

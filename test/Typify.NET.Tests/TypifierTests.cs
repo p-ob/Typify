@@ -10,12 +10,12 @@
 
         static TypifierTests()
         {
-            var thisType = typeof(Typify.NET.Tests.Library.Entity).GetTypeInfo();
+            var thisType = typeof(Library.Entity).GetTypeInfo();
             AssemblyFile = thisType.Assembly.Location;
         }
 
         [Fact]
-        public void Typify_GenerateDefaultFile_Test()
+        public void Typify_DefaultFile_Test()
         {
             var typifyOptions = new TypifyOptions
             {
@@ -28,9 +28,9 @@
         }
 
         [Fact]
-        public void Typify_GenerateFileDestination_Test()
+        public void Typify_DestinationFolder_Test()
         {
-            var destination = "TestDestination/";
+            const string destination = "TestDestination/";
             var typifyOptions = new TypifyOptions
             {
                 AssemblyFile = AssemblyFile,
@@ -43,9 +43,24 @@
         }
 
         [Fact]
+        public void Typify_DestinationFile_Test()
+        {
+            const string destination = "TestDestination/test.ts";
+            var typifyOptions = new TypifyOptions
+            {
+                AssemblyFile = AssemblyFile,
+                Destination = destination
+            };
+
+            Typifier.Typify(typifyOptions);
+
+            Assert.True(File.Exists(destination), "Did not generate expected file.");
+        }
+
+        [Fact]
         public void Typify_InvalidFileType_ThrowsTypifyInvalidOptionException_Test()
         {
-            var destination = "TestDestination/notatypescriptfile.cs";
+            const string destination = "TestDestination/notatypescriptfile.cs";
             var typifyOptions = new TypifyOptions
             {
                 AssemblyFile = AssemblyFile,

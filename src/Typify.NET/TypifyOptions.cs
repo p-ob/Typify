@@ -10,12 +10,15 @@
 
         public string AssemblyFile { get; set; }
 
+        public string TargetTypeScriptVersion { get; set; }
+
         public TypifyOptions()
         {
             NamingStrategy = NamingStrategy.CamelCase;
             OneFilePerNamespace = false;
             Destination = string.Empty;
             AssemblyFile = string.Empty;
+            TargetTypeScriptVersion = "2.2";
         }
     }
 }

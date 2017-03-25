@@ -111,7 +111,7 @@
         private static IEnumerable<Type> GetPropertyTypesToTypify(Type type)
         {
             var propertyTypes =
-                type.GetTypeInfo().GetProperties(TypeUtils.PropertyBindingFlags)
+                type.GetTypeInfo().GetProperties(TypeUtils.MemberBindingFlags)
                     .Where(
                         p =>
                             !(TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
@@ -182,7 +182,7 @@
             return groupedByNamespaceImportedProperties.Aggregate(importString,
                 (current, groupedByNamespaceImport) =>
                     current +
-                    $"\timport {{ {string.Join(", ", groupedByNamespaceImport.Select(p => p.Type))} }} from '{groupedByNamespaceImport.Key}';\n");
+                    $"\timport {{ {string.Join(", ", groupedByNamespaceImport.Select(p => p.TypeScriptType))} }} from '{groupedByNamespaceImport.Key}';\n");
         }
 
         private static void ValidateOptions(TypifyOptions options)
@@ -196,6 +196,12 @@
             {
                 throw new TypifyInvalidOptionException(nameof(TypifyOptions.Destination), options.Destination,
                     "Not a valid file path. Needs to be a TypeScript or TypeScript definition file (e.g. *.ts or *.d.ts");
+            }
+            var ts2 = new Version(2, 0);
+            if (!Version.TryParse(options.TargetTypeScriptVersion, out var v) || v.CompareTo(ts2) < 0)
+            {
+                throw new TypifyInvalidOptionException(nameof(TypifyOptions.TargetTypeScriptVersion),
+                    options.TargetTypeScriptVersion, "Not a valid target version. Must be at least 2.0");
             }
         }
     }

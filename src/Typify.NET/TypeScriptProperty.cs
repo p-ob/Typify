@@ -11,38 +11,50 @@
     {
         private readonly TypifyOptions _options;
 
-        public PropertyInfo Source { get; }
+        public MemberInfo Source { get; }
 
-        public string Name => FormatName();
+        public Type Type { get; }
+
+        public string Name { get; }
 
         public bool IsImport { get; private set; }
 
-        public string Namespace => Source.PropertyType.Namespace.ToTypeScriptNamespace();
+        public string Namespace { get; }
 
-        public string Type { get; }
+        public string TypeScriptType { get; }
 
-        public bool IsNullable => Source.PropertyType.IsNullable();
+        public bool IsNullable { get; }
 
-        public bool IsReadonly
+        public bool IsReadonly { get; }
+
+        public TypeScriptProperty(MemberInfo source, TypifyOptions options)
         {
-            get
-            {
-                var editableAttribute = Source.GetCustomAttribute<EditableAttribute>();
-                return (editableAttribute != null && !editableAttribute.AllowEdit) || Source.GetSetMethod() == null ||
-                       !Source.CanWrite;
-            }
-        }
-
-        public TypeScriptProperty(PropertyInfo source, TypifyOptions options)
-        {
-            Source = source;
-            Type = MapTypeToTypeScriptType(Source.PropertyType);
             _options = options;
+            Source = source;
+            var propertyNoSetMethod = false;
+            switch (Source)
+            {
+                case PropertyInfo p:
+                    Type = p.PropertyType;
+                    propertyNoSetMethod = p.GetSetMethod() == null;
+                    break;
+                case FieldInfo f:
+                    Type = f.FieldType;
+                    break;
+                default: 
+                    throw new TypifyException("Shit");
+            }
+            Name = FormatName();
+            Namespace = Type.Namespace.ToTypeScriptNamespace();
+            TypeScriptType = MapTypeToTypeScriptType(Type);
+            IsNullable = Type.IsNullable();
+            var editableAttribute = source.GetCustomAttribute<EditableAttribute>();
+            IsReadonly = (editableAttribute != null && !editableAttribute.AllowEdit) || propertyNoSetMethod;
         }
 
         public string ToTypeScriptString()
         {
-            return $"{(IsReadonly ? "readonly " : "")}{Name}{(IsNullable ? "?" : "")}: {Type};";
+            return $"{(IsReadonly ? "readonly " : "")}{Name}{(IsNullable ? "?" : "")}: {TypeScriptType};";
         }
 
         private string FormatName()
@@ -89,7 +101,11 @@
                             var typeScriptValueType = MapTypeToTypeScriptType(valueType);
                             return $"{{ [key: {typeScriptKeyType}]: {typeScriptValueType}; }}";
                         }
-                        return "Object";
+                        var targetVersion = new Version(_options.TargetTypeScriptVersion);
+                        var ts22Version = new Version(2, 2);
+
+                        // support 2.2 object type
+                        return targetVersion.CompareTo(ts22Version) >= 0 ? "object" : "any";
                     }
                 }
 
@@ -118,8 +134,7 @@
                 // assume complex objects have TypeScript definitions created
                 if (typeInfo.IsClass || typeInfo.IsEnum)
                 {
-                    IsImport = Source.DeclaringType.Namespace != Source.PropertyType.Namespace &&
-                               !Source.PropertyType.IsSystemType();
+                    IsImport = Source.DeclaringType.Namespace != Type.Namespace && !Type.IsSystemType();
 
                     return type.Name;
                 }

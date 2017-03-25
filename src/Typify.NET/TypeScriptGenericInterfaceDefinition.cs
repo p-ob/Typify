@@ -39,8 +39,10 @@
 
         private IEnumerable<TypeScriptProperty> GetTypeScriptProperties()
         {
-            var properties = Source.GetTypeInfo().GetProperties(TypeUtils.PropertyBindingFlags).Distinct();
-            return properties.Select(p => new TypeScriptProperty(p, _options));
+            var typeInfo = Source.GetTypeInfo();
+            var properties = typeInfo.GetProperties(TypeUtils.MemberBindingFlags).Distinct();
+            var fields = typeInfo.GetFields(TypeUtils.MemberBindingFlags);
+            return properties.Concat<MemberInfo>(fields).Select(p => new TypeScriptProperty(p, _options));
         }
     }
 }

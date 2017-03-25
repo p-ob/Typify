@@ -5,7 +5,7 @@
 
     internal static class TypeUtils
     {
-        public const BindingFlags PropertyBindingFlags =
+        public const BindingFlags MemberBindingFlags =
             BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
 
         public static string GetNameWithoutGenericArity(this Type t)
