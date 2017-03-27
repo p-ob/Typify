@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\typify\typify.csproj" />
+    <ProjectReference Include="..\Typify.NET.xunit\Typify.NET.xunit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
