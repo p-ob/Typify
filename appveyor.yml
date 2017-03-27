@@ -11,5 +11,5 @@ build_script:
   - dotnet pack -c Release -o ../../packages --no-build /p:BuildNumber=%APPVEYOR_BUILD_NUMBER%
 
 test_script:
-  - dotnet test test/Typify.NET.Tests/Typify.Net.Tests.csproj
-  - dotnet test test/typify.Tests/typify.Tests.csproj
+  - dotnet test test/Typify.NET.Tests/Typify.Net.Tests.csproj --filter Category=Unit
+  - dotnet test test/typify.Tests/typify.Tests.csproj --filter Category=Unit

@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Reflection;
+    using Typify.NET.xunit;
     using Xunit;
 
     public class TypifierTests
@@ -15,6 +16,7 @@
         }
 
         [Fact]
+        [Unit]
         public void Typify_DefaultFile_Test()
         {
             var typifyOptions = new TypifyOptions
@@ -28,6 +30,7 @@
         }
 
         [Fact]
+        [Unit]
         public void Typify_DestinationFolder_Test()
         {
             const string destination = "TestDestination/";
@@ -44,6 +47,7 @@
         }
 
         [Fact]
+        [Unit]
         public void Typify_DestinationFile_Test()
         {
             const string destination = "TestDestination/test.ts";
@@ -59,6 +63,7 @@
         }
 
         [Fact]
+        [Unit]
         public void Typify_InvalidFileType_ThrowsTypifyInvalidOptionException_Test()
         {
             const string destination = "TestDestination/notatypescriptfile.cs";
@@ -80,13 +85,16 @@
             }
         }
 
-        [Fact]
-        public void Typify_InvalidTargetTsVersion_ThrowsTypifyInvalidOptionException_Test()
+        [Theory]
+        [InlineData("notaversionnumber")]
+        [InlineData("1.8")]
+        [Unit]
+        public void Typify_InvalidTargetTsVersion_ThrowsTypifyInvalidOptionException_Test(string tsVersion)
         {
             var typifyOptions = new TypifyOptions
             {
                 AssemblyFile = AssemblyFile,
-                TargetTypeScriptVersion = "notaversionnumber"
+                TargetTypeScriptVersion = tsVersion
             };
 
             try
@@ -102,27 +110,7 @@
         }
 
         [Fact]
-        public void Typify_UnsupportedTsVersion_ThrowsTypifyInvalidOptionException_Test()
-        {
-            var typifyOptions = new TypifyOptions
-            {
-                AssemblyFile = AssemblyFile,
-                TargetTypeScriptVersion = "1.8"
-            };
-
-            try
-            {
-                Typifier.Typify(typifyOptions);
-                Assert.False(true, $"Did not throw {nameof(TypifyInvalidOptionException)}");
-            }
-            catch (TypifyInvalidOptionException e)
-            {
-                Assert.True(string.Equals(e.OptionName, nameof(TypifyOptions.TargetTypeScriptVersion)),
-                    $"Threw unexpected {nameof(TypifyInvalidOptionException)}");
-            }
-        }
-
-        [Fact]
+        [Unit]
         public void Typify_AssemblyFileDoesntExist_ThrowsTypifyInvalidOptionException_Test()
         {
             var typifyOptions = new TypifyOptions
