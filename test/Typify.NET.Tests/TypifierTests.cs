@@ -10,8 +10,8 @@
 
         static TypifierTests()
         {
-            var thisType = typeof(Library.Entity).GetTypeInfo();
-            AssemblyFile = thisType.Assembly.Location;
+            var thisLibraryType = typeof(Library.Entity).GetTypeInfo();
+            AssemblyFile = thisLibraryType.Assembly.Location;
         }
 
         [Fact]
@@ -39,7 +39,8 @@
 
             Typifier.Typify(typifyOptions);
 
-            Assert.True(File.Exists($"{destination}{Typifier.DefaultTypeScriptDefinitionFilename}"), "Did not generate expected file.");
+            Assert.True(File.Exists($"{destination}{Typifier.DefaultTypeScriptDefinitionFilename}"),
+                "Did not generate expected file.");
         }
 
         [Fact]
@@ -80,9 +81,54 @@
         }
 
         [Fact]
-        public void Typify_NoAssemblyFile_ThrowsTypifyInvalidOptionException_Test()
+        public void Typify_InvalidTargetTsVersion_ThrowsTypifyInvalidOptionException_Test()
         {
-            var typifyOptions = new TypifyOptions();
+            var typifyOptions = new TypifyOptions
+            {
+                AssemblyFile = AssemblyFile,
+                TargetTypeScriptVersion = "notaversionnumber"
+            };
+
+            try
+            {
+                Typifier.Typify(typifyOptions);
+                Assert.False(true, $"Did not throw {nameof(TypifyInvalidOptionException)}");
+            }
+            catch (TypifyInvalidOptionException e)
+            {
+                Assert.True(string.Equals(e.OptionName, nameof(TypifyOptions.TargetTypeScriptVersion)),
+                    $"Threw unexpected {nameof(TypifyInvalidOptionException)}");
+            }
+        }
+
+        [Fact]
+        public void Typify_UnsupportedTsVersion_ThrowsTypifyInvalidOptionException_Test()
+        {
+            var typifyOptions = new TypifyOptions
+            {
+                AssemblyFile = AssemblyFile,
+                TargetTypeScriptVersion = "1.8"
+            };
+
+            try
+            {
+                Typifier.Typify(typifyOptions);
+                Assert.False(true, $"Did not throw {nameof(TypifyInvalidOptionException)}");
+            }
+            catch (TypifyInvalidOptionException e)
+            {
+                Assert.True(string.Equals(e.OptionName, nameof(TypifyOptions.TargetTypeScriptVersion)),
+                    $"Threw unexpected {nameof(TypifyInvalidOptionException)}");
+            }
+        }
+
+        [Fact]
+        public void Typify_AssemblyFileDoesntExist_ThrowsTypifyInvalidOptionException_Test()
+        {
+            var typifyOptions = new TypifyOptions
+            {
+                AssemblyFile = "somefake.dll"
+            };
 
             try
             {

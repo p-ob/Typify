@@ -41,26 +41,33 @@
             var typesToTypify = new List<Type>();
             Assembly assembly;
 
-            try
+            if (!string.IsNullOrEmpty(assemblyFile))
             {
-                assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyFile);
+                try
+                {
+                    assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyFile);
+                }
+                catch (FileLoadException)
+                {
+                    // check if the assembly is already loaded before throwing
+                    var loadedAssemblyNames = DependencyContext.Default.GetDefaultAssemblyNames();
+                    var typifyOptionAssemblyName = AssemblyLoadContext.GetAssemblyName(assemblyFile);
+                    var matchingAssemblyName =
+                        loadedAssemblyNames.FirstOrDefault(
+                            an => string.Equals(an.Name, typifyOptionAssemblyName.Name));
+                    if (matchingAssemblyName != null)
+                    {
+                        assembly = Assembly.Load(matchingAssemblyName);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-            catch (FileLoadException)
+            else
             {
-                // check if the assembly is already loaded before throwing
-                var loadedAssemblyNames = DependencyContext.Default.GetDefaultAssemblyNames();
-                var typifyOptionAssemblyName = AssemblyLoadContext.GetAssemblyName(assemblyFile);
-                var matchingAssemblyName =
-                    loadedAssemblyNames.FirstOrDefault(
-                        an => string.Equals(an.Name, typifyOptionAssemblyName.Name));
-                if (matchingAssemblyName != null)
-                {
-                    assembly = Assembly.Load(matchingAssemblyName);
-                }
-                else
-                {
-                    throw;
-                }
+                assembly = Assembly.GetEntryAssembly();
             }
 
             var typeInfos = assembly.GetTypes().Select(t => t.GetTypeInfo());
@@ -187,9 +194,13 @@
 
         private static void ValidateOptions(TypifyOptions options)
         {
-            if (string.IsNullOrEmpty(options.AssemblyFile))
+            if (!string.IsNullOrEmpty(options.AssemblyFile))
             {
-                throw new TypifyInvalidOptionException(nameof(options.AssemblyFile), options.AssemblyFile, "Need assembly file");
+                if (!File.Exists(options.AssemblyFile))
+                {
+                    throw new TypifyInvalidOptionException(nameof(options.AssemblyFile), options.AssemblyFile,
+                        "Need assembly file");
+                }
             }
             var extension = Path.GetExtension(options.Destination);
             if (!string.IsNullOrEmpty(extension) && !string.Equals(extension, ".ts"))
