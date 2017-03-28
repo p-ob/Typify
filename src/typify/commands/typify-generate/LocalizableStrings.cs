@@ -6,6 +6,10 @@
 
         public const string AppFullName = "Typify.NET Generator";
 
+        public const string ProjectArgumentName = "PROJECT";
+
+        public const string ProjectArgumentDescription = "The project to Typify";
+
         public const string AssemblyOptionName = "ASSEMBLY";
 
         public const string AssemblyOptionDescription = "The source assembly dll to Typify.";

@@ -5,7 +5,6 @@
     using System.Linq;
     using Typify.NET.Tools.Generate;
     using Typify.NET.Tools.Help;
-    using Typify.NET.Tools.Utils;
 
     public static class Program
     {

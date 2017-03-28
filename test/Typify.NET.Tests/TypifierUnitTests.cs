@@ -5,18 +5,18 @@
     using Typify.NET.xunit;
     using Xunit;
 
-    public class TypifierTests
+    [Unit]
+    public class TypifierUnitTests
     {
         private static readonly string AssemblyFile;
 
-        static TypifierTests()
+        static TypifierUnitTests()
         {
             var thisLibraryType = typeof(Library.Entity).GetTypeInfo();
             AssemblyFile = thisLibraryType.Assembly.Location;
         }
 
         [Fact]
-        [Unit]
         public void Typify_DefaultFile_Test()
         {
             var typifyOptions = new TypifyOptions
@@ -30,7 +30,6 @@
         }
 
         [Fact]
-        [Unit]
         public void Typify_DestinationFolder_Test()
         {
             const string destination = "TestDestination/";
@@ -47,7 +46,6 @@
         }
 
         [Fact]
-        [Unit]
         public void Typify_DestinationFile_Test()
         {
             const string destination = "TestDestination/test.ts";
@@ -63,7 +61,6 @@
         }
 
         [Fact]
-        [Unit]
         public void Typify_InvalidFileType_ThrowsTypifyInvalidOptionException_Test()
         {
             const string destination = "TestDestination/notatypescriptfile.cs";
@@ -88,7 +85,6 @@
         [Theory]
         [InlineData("notaversionnumber")]
         [InlineData("1.8")]
-        [Unit]
         public void Typify_InvalidTargetTsVersion_ThrowsTypifyInvalidOptionException_Test(string tsVersion)
         {
             var typifyOptions = new TypifyOptions
@@ -110,7 +106,6 @@
         }
 
         [Fact]
-        [Unit]
         public void Typify_AssemblyFileDoesntExist_ThrowsTypifyInvalidOptionException_Test()
         {
             var typifyOptions = new TypifyOptions

@@ -6,5 +6,6 @@
     <RootNamespace>Typify.NET.Tools</RootNamespace>
     <PackageTags>typify</PackageTags>
     <PackageType>DotnetCliTool</PackageType>
+    <AssemblyName Condition="'$(Platform)' == 'x86'">dotnet-typify.x86</AssemblyName>
   </PropertyGroup>
 </Project>

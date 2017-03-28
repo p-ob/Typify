@@ -7,9 +7,7 @@
 		<RepositoryUrl>https://github.com/p-ob/Typify</RepositoryUrl>
 		<PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
 		<Description>Typify Command Line Interface tooling</Description>
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<RootNamespace>Typify.NET.Tools</RootNamespace>
-		<SignAssembly>True</SignAssembly>
     <OutputType>Exe</OutputType>
     <AssemblyName Condition="'$(Platform)' == 'x86'">typify.x86</AssemblyName>
     <IsPackable>false</IsPackable>
@@ -21,6 +19,7 @@
 		<ProjectReference Include="..\Typify.NET\Typify.NET.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Build" Version="15.1.548" />
 		<PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
 	</ItemGroup>
 </Project>

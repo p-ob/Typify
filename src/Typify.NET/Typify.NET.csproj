@@ -6,7 +6,6 @@
 		<RepositoryUrl>https://github.com/p-ob/Typify</RepositoryUrl>
 		<PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
 		<Description>Generate TypeScript definitions for desired .NET classes</Description>
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.1" />

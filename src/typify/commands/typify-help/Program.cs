@@ -1,7 +1,6 @@
 ﻿namespace Typify.NET.Tools.Help
 {
     using Microsoft.Extensions.CommandLineUtils;
-    using Typify.NET.Tools.Utils;
 
     internal class HelpCommand
     {
