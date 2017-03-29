@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.InteropServices.ComTypes;
     using System.Runtime.Loader;
     using Microsoft.Extensions.DependencyModel;
     using Typify.NET.Utils;
@@ -81,8 +82,10 @@
                 }
             }
 
-            var propertyTypes = typesToTypify.SelectMany(GetPropertyTypesToTypify).Distinct().ToList();
-            typesToTypify.AddRange(propertyTypes.Where(pt => !typesToTypify.Contains(pt)));
+            var memberTypes = typesToTypify.SelectMany(GetMemberTypesToTypify).Distinct().ToList();
+            typesToTypify.AddRange(memberTypes.Where(mt => !typesToTypify.Contains(mt)));
+            var baseTypes = typesToTypify.SelectMany(GetBaseTypesToTypify).Distinct().ToList();
+            typesToTypify.AddRange(baseTypes.Where(bt => !typesToTypify.Contains(bt)));
 
             return typesToTypify;
         }
@@ -115,7 +118,7 @@
             return typeScriptDefinition;
         }
 
-        private static IEnumerable<Type> GetPropertyTypesToTypify(Type type)
+        private static IEnumerable<Type> GetMemberTypesToTypify(Type type)
         {
             var propertyTypes =
                 type.GetTypeInfo().GetProperties(TypeUtils.MemberBindingFlags)
@@ -125,9 +128,27 @@
                               p.PropertyType.IsSystemType()))
                     .Select(t => t.PropertyType)
                     .ToList();
-            var subPropertyTypes = propertyTypes.SelectMany(GetPropertyTypesToTypify).Distinct().ToList();
+            var fieldTypes = type.GetTypeInfo().GetFields(TypeUtils.MemberBindingFlags)
+                    .Where(
+                        f =>
+                            !(TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(f.FieldType) ||
+                              f.FieldType.IsSystemType() || f.FieldType.GetTypeInfo().IsEnum))
+                    .Select(t => t.FieldType)
+                    .ToList();
+            var subPropertyTypes = propertyTypes.Concat(fieldTypes).SelectMany(GetMemberTypesToTypify).Distinct().ToList();
             propertyTypes.AddRange(subPropertyTypes);
+
             return propertyTypes;
+        }
+
+        private static IEnumerable<Type> GetBaseTypesToTypify(Type type)
+        {
+            var baseType = type.GetTypeInfo().BaseType;
+            if (!(baseType == null || TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(baseType) || baseType.IsSystemType()))
+            {
+                return new List<Type>{ baseType }.Concat(GetBaseTypesToTypify(baseType));
+            }
+            return Enumerable.Empty<Type>();
         }
 
         private static void WriteDefinitions(IEnumerable<IGrouping<string, ITypeScriptDefinition>> namespacedDefinitions, string destination)
@@ -183,7 +204,9 @@
 
             var distinctImports = namespacedDefinitions.SelectMany(d => d.Properties)
                 .Where(p => p.IsImport)
-                .DistinctBy(p => new { p.Name, p.Namespace });
+                .DistinctBy(p => new { p.Name, p.Namespace }).Cast<TypeScriptImportable>().ToList();
+            distinctImports.AddRange(namespacedDefinitions.Where(def => def.Base != null && def.Base.IsImport)
+                .DistinctBy(b => new { b.Name, b.Namespace }).Cast<TypeScriptImportable>().ToList());
             var groupedByNamespaceImportedProperties = distinctImports.GroupBy(p => p.Namespace);
 
             return groupedByNamespaceImportedProperties.Aggregate(importString,

@@ -23,6 +23,8 @@
 
         public GenericClass<int, string> GenericClass { get; set; }
 
+        public ExtendedClass ExtendedSubEntity { get; set; }
+
         private int _notPublic;
     }
 }

@@ -7,7 +7,7 @@
     using System.Reflection;
     using Typify.NET.Utils;
 
-    internal class TypeScriptProperty
+    internal class TypeScriptProperty : TypeScriptImportable
     {
         private readonly TypifyOptions _options;
 
@@ -16,12 +16,6 @@
         public Type Type { get; }
 
         public string Name { get; }
-
-        public bool IsImport { get; private set; }
-
-        public string Namespace { get; }
-
-        public string TypeScriptType { get; }
 
         public bool IsNullable { get; }
 

@@ -18,7 +18,7 @@
 
         public override IEnumerable<TypeScriptProperty> Properties => GetTypeScriptProperties();
 
-        public override IEnumerable<ITypeScriptDefinition> Dependencies { get; set; }
+        public override TypeScriptBaseClass Base => GetBaseType(); 
 
         public TypeScriptInterfaceDefinition(TypifyOptions options)
         {
@@ -29,7 +29,7 @@
         {
             var tabsString = new string('\t', startTabIndex);
             return
-                $"{tabsString}export interface {Name} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypeScriptString()))}\n{tabsString}}}";
+                $"{tabsString}export interface {Name}{(Base != null ? GetExtends() : string.Empty)} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypeScriptString()))}\n{tabsString}}}";
         }
 
         private IEnumerable<TypeScriptProperty> GetTypeScriptProperties()
@@ -38,6 +38,31 @@
             var properties = typeInfo.GetProperties(TypeUtils.MemberBindingFlags).Distinct();
             var fields = typeInfo.GetFields(TypeUtils.MemberBindingFlags);
             return properties.Concat<MemberInfo>(fields).Select(p => new TypeScriptProperty(p, _options));
+        }
+
+        private string GetExtends()
+        {
+            return $" extends {Base.TypeScriptType}";
+        }
+
+        private TypeScriptBaseClass GetBaseType()
+        {
+            var baseType = Source.GetTypeInfo().BaseType;
+            if (
+                !(baseType == null || TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(baseType) ||
+                  baseType.IsSystemType()))
+            {
+                var baseClass = new TypeScriptBaseClass
+                {
+                    TypeScriptType = baseType.Name,
+                    Namespace = baseType.Namespace.ToTypeScriptNamespace()
+                };
+
+                baseClass.IsImport = !string.Equals(baseClass.Namespace, Namespace);
+                return baseClass;
+            }
+
+            return null;
         }
     }
 }

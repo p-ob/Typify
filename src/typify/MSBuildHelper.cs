@@ -19,7 +19,6 @@
             var projectCollection = new ProjectCollection();
             var project = new Project(projectPath, null, null, projectCollection, ProjectLoadSettings.IgnoreMissingImports);
             project.ReevaluateIfNecessary();
-            Reporter.Output.WriteLine(string.Join(",\n", project.Properties.Select(p => $"{p.Name}: {p.EvaluatedValue}")));
             var outputPath = project.GetProperty(MsBuildOutputPathProperty);
             var outDir = project.GetProperty(MsBuildOutputDirProperty);
             var projectDirectory = project.GetProperty(MsBuildProjectDirectoryProperty);

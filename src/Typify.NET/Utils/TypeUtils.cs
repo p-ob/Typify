@@ -6,7 +6,7 @@
     internal static class TypeUtils
     {
         public const BindingFlags MemberBindingFlags =
-            BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+            BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
 
         public static string GetNameWithoutGenericArity(this Type t)
         {
