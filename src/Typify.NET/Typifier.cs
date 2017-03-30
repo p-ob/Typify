@@ -26,12 +26,19 @@
             {
                 var typeToTypify = typesToTypify.Dequeue();
                 var results = TypesScriptDefinitionFactory.BuildFromType(typeToTypify, options);
-                typeScriptDefinitions.Add(results.definition);
-                foreach (var dependentType in results.dependentTypes)
+                var def = results.definition;
+                if (
+                    !typeScriptDefinitions.Any(
+                        tsd =>
+                            string.Equals(tsd.Namespace, def.Namespace) && string.Equals(tsd.SourceName, def.SourceName)))
                 {
-                    if (!typesToTypify.Contains(dependentType))
+                    typeScriptDefinitions.Add(def);
+                    foreach (var dependentType in results.dependentTypes)
                     {
-                        typesToTypify.Enqueue(dependentType);
+                        if (!typesToTypify.Contains(dependentType))
+                        {
+                            typesToTypify.Enqueue(dependentType);
+                        }
                     }
                 }
             }
@@ -85,45 +92,7 @@
                 }
             }
 
-            var memberTypes = typesToTypify.SelectMany(GetMemberTypesToTypify).Distinct().ToList();
-            typesToTypify.AddRange(memberTypes.Where(mt => !typesToTypify.Contains(mt)));
-            var baseTypes = typesToTypify.SelectMany(GetBaseTypesToTypify).Distinct().ToList();
-            typesToTypify.AddRange(baseTypes.Where(bt => !typesToTypify.Contains(bt)));
-
             return typesToTypify;
-        }
-
-        private static IEnumerable<Type> GetMemberTypesToTypify(Type type)
-        {
-            var propertyTypes =
-                type.GetTypeInfo().GetProperties(TypeUtils.MemberBindingFlags)
-                    .Where(
-                        p =>
-                            !(TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(p.PropertyType) ||
-                              p.PropertyType.IsSystemType()))
-                    .Select(t => t.PropertyType)
-                    .ToList();
-            var fieldTypes = type.GetTypeInfo().GetFields(TypeUtils.MemberBindingFlags)
-                    .Where(
-                        f =>
-                            !(TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(f.FieldType) ||
-                              f.FieldType.IsSystemType() || f.FieldType.GetTypeInfo().IsEnum))
-                    .Select(t => t.FieldType)
-                    .ToList();
-            var subPropertyTypes = propertyTypes.Concat(fieldTypes).SelectMany(GetMemberTypesToTypify).Distinct().ToList();
-            propertyTypes.AddRange(subPropertyTypes);
-
-            return propertyTypes;
-        }
-
-        private static IEnumerable<Type> GetBaseTypesToTypify(Type type)
-        {
-            var baseType = type.GetTypeInfo().BaseType;
-            if (!(baseType == null || TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(baseType) || baseType.IsSystemType()))
-            {
-                return new List<Type>{ baseType }.Concat(GetBaseTypesToTypify(baseType));
-            }
-            return Enumerable.Empty<Type>();
         }
 
         private static void WriteDefinitions(IEnumerable<IGrouping<string, TypeScriptDefinition>> namespacedDefinitions, string destination)

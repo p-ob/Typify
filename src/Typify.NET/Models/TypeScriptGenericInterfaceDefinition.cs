@@ -20,7 +20,14 @@
                         p =>
                             p.IsImport ||
                             !(p.Type.IsSystemType() || TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(p.Type)))
-                    .Select(p => p.Type);
+                    .Select(p => p.Type).ToList();
+
+            if (definition.Base != null)
+            {
+                dependentTypes.Add(definition.Base.Type);
+            }
+
+            dependentTypes = dependentTypes.Distinct().ToList();
 
             return (definition, dependentTypes);
         }

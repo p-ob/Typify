@@ -1,9 +1,7 @@
 ﻿namespace Typify.NET.Models
 {
     using System;
-    using System.Collections;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Reflection;
     using Typify.NET.Utils;
 
@@ -12,8 +10,6 @@
         private readonly TypifyOptions _options;
 
         public MemberInfo Source { get; }
-
-        public Type Type { get; }
 
         public string Name { get; }
 
