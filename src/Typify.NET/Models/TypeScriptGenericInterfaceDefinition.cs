@@ -46,7 +46,8 @@
 
         private string GetGenericArgumentsString()
         {
-            return string.Join(",", Source.GetTypeInfo().GetGenericArguments().Select(arg => arg.Name));
+            return string.Join(",",
+                Source.GetGenericTypeDefinition().GetTypeInfo().GetGenericArguments().Select(arg => arg.Name));
         }
 
         private string GetExtendsTypeScriptString()

@@ -50,7 +50,9 @@
             var typeInfo = Source.GetTypeInfo();
             var properties = typeInfo.GetProperties(TypeUtils.MemberBindingFlags).Distinct();
             var fields = typeInfo.GetFields(TypeUtils.MemberBindingFlags);
-            return properties.Concat<MemberInfo>(fields).Select(m => TypeScriptPropertyFactory.BuildFromMemberInfo(m, Namespace, Options));
+            return
+                properties.Concat<MemberInfo>(fields)
+                    .Select(m => TypeScriptPropertyFactory.BuildFromMemberInfo(m, Namespace, Options));
         }
 
         private string GetExtendsTypeScriptString()
