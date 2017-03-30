@@ -1,7 +1,6 @@
 ﻿namespace Typify.NET.Tools.Generate
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -65,8 +64,6 @@
                 var projectFile = GetProjectFilePath(fileOrDir);
                 typifyOptions.AssemblyFile = MsBuildHelper.GetAssemblyForProject(projectFile);
             }
-
-            Reporter.Output.WriteLine($"Assembly: {typifyOptions.AssemblyFile}");
 
             if (_namingStrategyOption.HasValue())
             {

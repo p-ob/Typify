@@ -4,8 +4,6 @@
 	<PropertyGroup>
 		<TargetFramework>netcoreapp1.1</TargetFramework>
 		<AssemblyName>typify</AssemblyName>
-		<RepositoryUrl>https://github.com/p-ob/Typify</RepositoryUrl>
-		<PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
 		<Description>Typify Command Line Interface tooling</Description>
 		<RootNamespace>Typify.NET.Tools</RootNamespace>
     <OutputType>Exe</OutputType>

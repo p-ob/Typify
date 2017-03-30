@@ -1,8 +1,6 @@
 ﻿namespace Typify.NET.Tools
 {
-    using System;
     using System.IO;
-    using System.Linq;
     using Microsoft.Build.Evaluation;
 
     internal static class MsBuildHelper

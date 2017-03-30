@@ -1,4 +1,4 @@
-﻿namespace Typify.NET
+﻿namespace Typify.NET.Models
 {
     public class TypeScriptImportable
     {

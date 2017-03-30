@@ -1,6 +1,8 @@
 <Project>
   <Import Project="..\version.props" />
   <PropertyGroup>
+    <RepositoryUrl>https://github.com/p-ob/Typify</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/p-ob/Typify/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageTags>Typify;dotnet-typify;Typify.NET;</PackageTags>
     <Product>Typify</Product>
     <RepositoryType>git</RepositoryType>

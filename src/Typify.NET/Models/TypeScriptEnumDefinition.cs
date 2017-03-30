@@ -1,21 +1,21 @@
-﻿namespace Typify.NET
+﻿namespace Typify.NET.Models
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Typify.NET.Utils;
 
-    internal class TypeScriptEnumDefinition<T> : ITypeScriptDefinition where T : struct, IConvertible
+    internal class TypeScriptEnumDefinition : TypeScriptDefinition
     {
-        public Type Source => typeof(T);
-
-        public string Namespace => Source.Namespace.ToTypeScriptNamespace();
-
         public IEnumerable<string> EnumValueNames => Enum.GetNames(Source);
 
         public string Name => Source.Name;
 
-        public string ToTypeScriptString(int startTabIndex = 0)
+        public TypeScriptEnumDefinition(Type source, TypifyOptions options) : base(source, options)
+        {
+            
+        }
+
+        public override string ToTypeScriptString(int startTabIndex = 0)
         {
             var tabsString = new string('\t', startTabIndex);
             return
@@ -28,7 +28,7 @@
             return $"{enumValueName} = {value}";
         }
 
-        private object GetEnumValue(string enumValueName)
+        private int GetEnumValue(string enumValueName)
         {
             return (int)Enum.Parse(Source, enumValueName);
         }
