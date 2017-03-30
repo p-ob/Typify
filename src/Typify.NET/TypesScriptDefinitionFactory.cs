@@ -8,7 +8,9 @@
 
     internal static class TypesScriptDefinitionFactory
     {
-        public static (TypeScriptDefinition definition, IEnumerable<Type> dependentTypes) BuildFromType(Type source, TypifyOptions options)
+        public static (TypeScriptDefinition definition, IEnumerable<Type> dependentTypes) BuildFromType(
+            Type source,
+            TypifyOptions options)
         {
             var results = (definition: (TypeScriptDefinition)null, dependentTypes: Enumerable.Empty<Type>());
             var sourceTypeInfo = source.GetTypeInfo();
@@ -18,14 +20,9 @@
             }
             else
             {
-                if (sourceTypeInfo.IsGenericType)
-                {
-                    results = TypeScriptGenericInterfaceDefinition.Create(source, options);
-                }
-                else
-                {
-                    results = TypeScriptInterfaceDefinition.Create(source, options);
-                }
+                results = sourceTypeInfo.IsGenericType
+                    ? TypeScriptGenericInterfaceDefinition.Create(source, options)
+                    : TypeScriptInterfaceDefinition.Create(source, options);
             }
             return results;
         }

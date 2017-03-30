@@ -14,6 +14,7 @@
             {
                 var baseClass = new TypeScriptBaseClass
                 {
+                    Type = baseType,
                     TypeScriptType = baseType.Name,
                     Namespace = baseType.Namespace.ToTypeScriptNamespace()
                 };

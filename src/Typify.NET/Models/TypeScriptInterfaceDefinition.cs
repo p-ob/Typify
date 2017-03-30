@@ -14,7 +14,7 @@
 
         public TypeScriptInterfaceDefinition(Type source, TypifyOptions options) : base(source, options)
         {
-            Base = GetBaseType();
+            Base = TypeScriptBaseClassFactory.BuildFromType(source.GetTypeInfo().BaseType, Namespace);
             Properties = GetTypeScriptProperties();
         }
 
@@ -56,27 +56,6 @@
         private string GetExtendsTypeScriptString()
         {
             return $" extends {Base.TypeScriptType}";
-        }
-
-        private TypeScriptBaseClass GetBaseType()
-        {
-            var baseType = Source.GetTypeInfo().BaseType;
-            if (
-                !(baseType == null || TypeScriptUtils.DotNetTypeToTypeScriptTypeLookup.Contains(baseType) ||
-                  baseType.IsSystemType()))
-            {
-                var baseClass = new TypeScriptBaseClass
-                {
-                    TypeScriptType = baseType.Name,
-                    Namespace = baseType.Namespace.ToTypeScriptNamespace(),
-                    Type = baseType
-                };
-
-                baseClass.IsImport = !string.Equals(baseClass.Namespace, Namespace);
-                return baseClass;
-            }
-
-            return null;
         }
     }
 }

@@ -36,7 +36,7 @@
         {
             var tabsString = new string('\t', startTabIndex);
             return
-                $"{tabsString}export interface {FormatName()}<{GetGenericArgumentsString()}>{(Base != null ? GetExtends() : string.Empty)} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypeScriptString()))}\n{tabsString}}}";
+                $"{tabsString}export interface {FormatName()}<{GetGenericArgumentsString()}>{(Base != null ? GetExtendsTypeScriptString() : string.Empty)} {{\n{tabsString}\t{string.Join($"\n{tabsString}\t", Properties.Select(p => p.ToTypeScriptString()))}\n{tabsString}}}";
         }
 
         protected override string FormatName()
@@ -49,7 +49,7 @@
             return string.Join(",", Source.GetTypeInfo().GetGenericArguments().Select(arg => arg.Name));
         }
 
-        private string GetExtends()
+        private string GetExtendsTypeScriptString()
         {
             return $" extends {Base.TypeScriptType}";
         }

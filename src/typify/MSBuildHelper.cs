@@ -15,7 +15,8 @@
         public static string GetAssemblyForProject(string projectPath)
         {
             var projectCollection = new ProjectCollection();
-            var project = new Project(projectPath, null, null, projectCollection, ProjectLoadSettings.IgnoreMissingImports);
+            var project = new Project(projectPath, null, null, projectCollection,
+                ProjectLoadSettings.IgnoreMissingImports);
             project.ReevaluateIfNecessary();
             var outputPath = project.GetProperty(MsBuildOutputPathProperty);
             var outDir = project.GetProperty(MsBuildOutputDirProperty);
